@@ -10,12 +10,12 @@
 - **定位**：面向有一定 CV / 图形基础的工程师与研究者，从“看得懂论文”到“能自己写一个可用的 3DGS / GS-SLAM demo”。
 - **技术覆盖（不完全列举）**  
   - 3DGS 基础与工程栈：原始 3D Gaussian Splatting、CUDA / rasterization 管线  
-  - **结构化 / 可泛化**：Scaffold-GS 等结构化高斯表示:contentReference[oaicite:0]{index=0}  
-  - **动态场景**：4DGS、4D Scaffold-GS、WorldSplat 等 4D 场景生成:contentReference[oaicite:1]{index=1}  
-  - **SLAM**：GS-SLAM、RTG-SLAM 以及其他 3DGS-SLAM 系列工作:contentReference[oaicite:2]{index=2}  
-  - **生成 / 扩散**：DreamGaussian、DiffusionGS、DiffGS 等 3D 生成方法:contentReference[oaicite:3]{index=3}  
-  - **语言与语义**：LangSplat、LangSplatV2 等 3D 语言场:contentReference[oaicite:4]{index=4}  
-  - **前馈 / 通用 / 多遍历驾驶场景**：AnySplat、MTGS 等:contentReference[oaicite:5]{index=5}  
+  - **结构化 / 可泛化**：Scaffold-GS 等结构化高斯表示[0]{index=0}  
+  - **动态场景**：4DGS、4D Scaffold-GS、WorldSplat 等 4D 场景生成[1]{index=1}  
+  - **SLAM**：GS-SLAM、RTG-SLAM 以及其他 3DGS-SLAM 系列工作[2]{index=2}  
+  - **生成 / 扩散**：DreamGaussian、DiffusionGS、DiffGS 等 3D 生成方法[3]{index=3}  
+  - **语言与语义**：LangSplat、LangSplatV2 等 3D 语言场[4]{index=4}  
+  - **前馈 / 通用 / 多遍历驾驶场景**：AnySplat、MTGS 等[5]{index=5}  
 
 ---
 
@@ -90,7 +90,7 @@
 **文件**：`chapter5.md`
 
 - Vanilla 3DGS 的问题：高斯冗余、尺度不一致、远距离视角退化
-- Scaffold-Gaussian Splatting：锚点 + 局部高斯 + 视角自适应预测:contentReference[oaicite:6]{index=6}  
+- Scaffold-Gaussian Splatting：锚点 + 局部高斯 + 视角自适应预测[6]{index=6}  
 - Anchor 生长 / 剪枝策略与多尺度结构
 - 复杂场景中的层次化表示（楼宇、户外、城市级）。
 - 与 MPGS / Multi-plane / Tri-plane 等结构化 3DGS 的比较与兼容
@@ -101,8 +101,8 @@
 **文件**：`chapter6.md`
 
 - 静态假设的破裂：动态物体、光照变化、遮挡与形变
-- 4D Gaussians 与时间维度建模：轨迹、高斯流形、anchor-based 动态建模:contentReference[oaicite:7]{index=7}  
-- WorldSplat：面向自动驾驶的 4D 生成式场景（feed-forward + diffusion 修复）:contentReference[oaicite:8]{index=8}  
+- 4D Gaussians 与时间维度建模：轨迹、高斯流形、anchor-based 动态建模[7]{index=7}  
+- WorldSplat：面向自动驾驶的 4D 生成式场景（feed-forward + diffusion 修复）[8]{index=8}  
 - 动态物体的典型处理策略  
   - 时序分解：静态场 + 动态残差场  
   - 前景 / 背景分离与 mask 辅助  
@@ -115,9 +115,9 @@
 **文件**：`chapter7.md`
 
 - SLAM 基础回顾：前端（跟踪）+ 后端（建图 / 优化）
-- GS-SLAM：首个基于 3DGS 的稠密 RGB-D SLAM，粗到细跟踪与高斯扩展策略:contentReference[oaicite:9]{index=9}  
-- RTG-SLAM：面向大规模场景的实时 3DGS 重建与紧凑高斯表示:contentReference[oaicite:10]{index=10}  
-- 其他 3DGS-SLAM 工作：Gaussian-SLAM、SplaTAM、GS³LAM 等:contentReference[oaicite:11]{index=11}  
+- GS-SLAM：首个基于 3DGS 的稠密 RGB-D SLAM，粗到细跟踪与高斯扩展策略[9]{index=9}  
+- RTG-SLAM：面向大规模场景的实时 3DGS 重建与紧凑高斯表示[10]{index=10}  
+- 其他 3DGS-SLAM 工作：Gaussian-SLAM、SplaTAM、GS³LAM 等[11]{index=11}  
 - 动态物体在 SLAM 中的特殊问题：  
   - 对定位的干扰与 tracking failure  
   - 静态 / 动态分层地图  
@@ -130,8 +130,8 @@
 **文件**：`chapter8.md`
 
 - 生成式 3D 的几种路线：SDS、latent 3D 著色、显式高斯生成
-- DreamGaussian：生成式高斯 splatting 的高效 3D 内容生成框架:contentReference[oaicite:12]{index=12}  
-- DiffusionGS：将 3DGS “烘焙”进单阶段扩散模型，实单图像到 3D 生成 / 重建:contentReference[oaicite:13]{index=13}  
+- DreamGaussian：生成式高斯 splatting 的高效 3D 内容生成框架[12]{index=12}  
+- DiffusionGS：将 3DGS “烘焙”进单阶段扩散模型，实单图像到 3D 生成 / 重建[13]{index=13}  
 - DiffGS 与其他高斯扩散生成方法：latent 空间、高斯数量控制、质量 vs 速度
 - Text-to-3D / Image-to-3D pipeline 中 3DGS 的位置：  
   - 多视图扩散 vs 单阶段 3D 扩散  
@@ -144,11 +144,11 @@
 **文件**：`chapter9.md`
 
 - 为什么需要 3D 语言场：开放词汇检索、语义编辑、人机交互
-- LangSplat：将 CLIP / SAM 语义嵌入到 3DGS 中，构建 3D 语言场:contentReference[oaicite:14]{index=14}  
-- LangSplatV2：基于高维特征字典与稀疏系数的高 FPS 语言高斯 splatting（450+ FPS）:contentReference[oaicite:15]{index=15}  
+- LangSplat：将 CLIP / SAM 语义嵌入到 3DGS 中，构建 3D 语言场[14]{index=14}  
+- LangSplatV2：基于高维特征字典与稀疏系数的高 FPS 语言高斯 splatting（450+ FPS）[15]{index=15}  
 - 语义场的优化：稀疏性、正则化、跨视角一致性
 - 结合 SLAM / 机器人：开放词汇 3D 导航、物体检索、交互式标注
--  Feat2GS 等“用 foundation model 特征驱动 3DGS”方法的关系:contentReference[oaicite:16]{index=16}  
+-  Feat2GS 等“用 foundation model 特征驱动 3DGS”方法的关系[16]{index=16}  
 
 ---
 
@@ -156,8 +156,8 @@
 **文件**：`chapter10.md`
 
 - 为什么要“前馈”与“可泛化”：实时应用、海量场景、无 pose 数据
-- AnySplat：从未标定多视图中前馈预测高斯 + 相机位姿的网络框架:contentReference[oaicite:17]{index=17}  
-- 与其他 feed-forward / generalizable 3DGS：Wild-GS、Gaussian-in-the-Wild 等的比较:contentReference[oaicite:18]{index=18}  
+- AnySplat：从未标定多视图中前馈预测高斯 + 相机位姿的网络框架[17]{index=17}  
+- 与其他 feed-forward / generalizable 3DGS：Wild-GS、Gaussian-in-the-Wild 等的比较[18]{index=18}  
 - 无 pose / 噪声 pose 场景中的几何约束与稳健损失设计
 - 前馈方法与传统优化式 3DGS 的融合：初始化 vs 微调
 
@@ -167,10 +167,10 @@
 **文件**：`chapter11.md`
 
 - 多遍历数据的特性：同一路段、多次采集、天气 / 时间 / 交通动态变化
-- MTGS：Multi-Traversal Gaussian Splatting —— 共享静态几何 + 多遍历动态节与外观校正:contentReference[oaicite:19]{index=19}  
+- MTGS：Multi-Traversal Gaussian Splatting —— 共享静态几何 + 多遍历动态节与外观校正[19]{index=19}  
 - 动态物体与 appearance variation 的联合建模（车辆流量、灯光、天气）
 - 与自动驾驶仿真 / 数字孪生 / 城市场景编辑的结合
-- 对比：ArmGS、SatGS、Skyfall-GS 等面向城市 / 卫星 / 驾驶场景的高斯方法:contentReference[oaicite:20]{index=20}  
+- 对比：ArmGS、SatGS、Skyfall-GS 等面向城市 / 卫星 / 驾驶场景的高斯方法[20]{index=20}  
 
 ---
 
