@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="./">
+    <title>第 7 章 · 3DGS + SLAM：GS-SLAM, RTG-SLAM 与在线重建</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/highlight.css">
+    <script src="assets/script.js" defer></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                processEscapes: false,
+                packages: {'[+]': ['noerrors', 'ams']}
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            loader: {
+                load: ['[tex]/noerrors', '[tex]/ams']
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3>目录</h3>
+                <button id="sidebar-toggle" class="sidebar-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <div class="sidebar-search">
+                <input type="text" id="sidebar-search-input" placeholder="搜索..." autocomplete="off">
+            </div>
+            <div id="tree-container">
+                <nav class="tree-nav" role="tree">
+                    <div class="tree-item " >
+                        <a href="index.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">3D Gaussian Splatting：从原理到实践（2025 版）</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter1.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 1 章 · 3DGS 与三维重建概览 —— 从 NeRF 到 Splat 的大图景</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter2.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 2 章 · 数学基础与渲染管线：3DGS 的心脏</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter3.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 3 章 · 数据与工具链：从多视到可训练场景</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter4.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 4 章 · 从零实现一个最小 3DGS 系统</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter5.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 5 章 · 结构化与可扩展 3DGS：Scaffold-GS 与层次化表达</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter6.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 6 章 · 动态场景与 4D Gaussian Splatting</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item active" >
+                        <a href="chapter7.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 7 章 · 3DGS + SLAM：GS-SLAM, RTG-SLAM 与在线重建</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter8.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 8 章 · 生成式与扩散 3DGS：DreamGaussian, DiffusionGS 与 DiffGS</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter9.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 9 章 · 语言与语义 3DGS：构建可交互的 3D 语言场</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter10.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 10 章 · 通用/前馈 3DGS 与非配准数据：AnySplat 与场景泛化</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter11.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 11 章 · 多遍历自动驾驶场景：MTGS 与城市级动态重建</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter12.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 12 章 · 工程实践、综合项目与未来方向</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="CLAUDE.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">Untitled</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </nav>
+        
+        <main class="content">
+            <article>
+                <h1 id="7-3dgs-slamgs-slam-rtg-slam">第 7 章 · 3DGS + SLAM：GS-SLAM, RTG-SLAM 与在线重建</h1>
+<blockquote>
+<p><strong>本章目标</strong>：深入理解基于 3D Gaussian Splatting 的 SLAM 系统设计。从 Tracking 与 Mapping 的数学对偶性出发，剖析 GS-SLAM、SplaTAM、RTG-SLAM 等 SOTA 架构。重点掌握在线化过程中的<strong>关键帧管理</strong>、<strong>动态物体剔除</strong>、<strong>回环检测与地图融合</strong>策略，以及如何处理 RGB-D 与单目两种输入模式。</p>
+</blockquote>
+<hr />
+<h2 id="71-slam">7.1 引言：稠密 SLAM 的“不可能三角”</h2>
+<p>在 3DGS 出现之前，视觉 SLAM 领域长期面临一个“不可能三角”的权衡：</p>
+<ol>
+<li><strong>稀疏 vs 稠密</strong>：ORB-SLAM 等特征点法速度快、精度高，但只能输出稀疏点云，无法直接用于导航避障或 AR 遮挡。</li>
+<li><strong>实时性 vs 质量</strong>：KinectFusion、ElasticFusion 等稠密方法受限于 TSDF 体素分辨率，大场景下显存和计算量呈立方级增长。</li>
+<li><strong>可塑性 vs 遗忘</strong>：基于 NeRF 的 SLAM（如 iMAP, NICE-SLAM）解决了连续性问题，但训练极慢，且面临“灾难性遗忘”（Catastrophic Forgetting）——优化新房间时，旧房间的几何可能崩坏。</li>
+</ol>
+<p><strong>3D Gaussian Splatting 的入局改变了这一切</strong>。它用离散的“高斯球”代替了神经网络权重或体素网格，同时实现了：</p>
+<ul>
+<li><strong>&gt;100 FPS 的渲染速度</strong>：支持高频 Tracking。</li>
+<li><strong>局部更新特性</strong>：修改地图的某个角落不会影响全局，天然适合增量式 SLAM。</li>
+<li><strong>显式几何</strong>：可直接转化为点云或 Mesh，无需昂贵的 Marching Cubes。</li>
+</ul>
+<hr />
+<h2 id="72-3dgs-slam">7.2 3DGS-SLAM 的核心架构与数学原理</h2>
+<p>大多数 3DGS SLAM 系统都遵循经典的 <strong>前端（Tracking）</strong> + <strong>后端（Mapping）</strong> 并行架构。</p>
+<h3 id="721-pipeline">7.2.1 系统数据流 (Pipeline)</h3>
+<div class="codehilite"><pre><span></span><code>Incoming Stream (RGB + Depth + Pose_init)
+       |
+       v
++-----------------------+           +------------------------+
+|   Frontend: Tracking  | &lt;-------&gt; |    Global Map (G)      |
+|  Min(Photo_Loss) -&gt; T |           |   List[3D Gaussians]   |
++-----------------------+           +-----------+------------+
+       |                                        ^
+       | (Is Keyframe?)                         |
+       v                                        | (Update)
++-----------------------+                       |
+|   Backend: Mapping    | ----------------------+
+|  Add / Prune / Clone  |  Optimization Window
+|  Refine Gaussians     |
++-----------------------+
+</code></pre></div>
+
+<h3 id="722-tracking">7.2.2 跟踪（Tracking）：逆向渲染问题</h3>
+<p>在 Tracking 阶段，我们冻结高斯地图参数 $G$，求解当前帧的相机位姿 $T \in SE(3)$。
+位姿通常由李代数 $\xi \in \mathfrak{se}(3)$ 参数化，通过指数映射 $T = \exp(\xi)$ 作用于相机。</p>
+<p>目标函数是最小化光度残差与几何残差：
+$$
+E(\xi) = \sum_{p \in \Omega} \lambda_c | I_{gt}(p) - I_{render}(p, \xi, G) |_1 + \lambda_d | D_{gt}(p) - D_{render}(p, \xi, G) |_1
+$$</p>
+<p><strong>技术难点：梯度流向</strong>
+在 Vanilla 3DGS 中，梯度是对高斯参数 $\mu, \Sigma, c, \alpha$ 求导。但在 SLAM Tracking 中，我们需要对相机外参求导。
+$$
+\frac{\partial E}{\partial \xi} = \frac{\partial E}{\partial I} \cdot \frac{\partial I}{\partial \mu_{2D}} \cdot \frac{\partial \mu_{2D}}{\partial \mu_{3D}} \cdot \frac{\partial \mu_{3D}}{\partial T} \cdot \frac{\partial T}{\partial \xi}
+$$
+其中关键项是 $\frac{\partial \mu_{3D}}{\partial T}$，即 3D 高斯中心点随相机位姿变化的雅可比矩阵。</p>
+<blockquote>
+<p><strong>Rule of Thumb (跟踪鲁棒性)</strong>：
+纯光度误差是一个高度非凸（Non-convex）的函数，容易陷入局部极小值。</p>
+<ol>
+<li><strong>恒速模型 (Constant Velocity Model)</strong>：用上一帧的速度预测当前帧位姿作为初值，至关重要。</li>
+<li><strong>图像金字塔 (Pyramid)</strong>：先在 1/4 分辨率下优化位姿，再在全分辨率下微调，可以扩大收敛域，抵抗大运动。</li>
+</ol>
+</blockquote>
+<h3 id="723-mapping">7.2.3 建图（Mapping）：增量式生长与维护</h3>
+<p>Mapping 线程负责更新 $G$。与离线 3DGS 不同，SLAM 不能每次都从头训练，必须采用<strong>滑窗优化 (Sliding Window Optimization)</strong>。</p>
+<ol>
+<li><strong>关键帧选择 (Keyframe Selection)</strong>：当当前帧与上一关键帧的视差（IoU 或 相对位姿）超过阈值时，将其插入关键帧数据库。</li>
+<li><strong>高斯初始化 (Initialization)</strong>：<ul>
+<li>利用 RGB-D 的深度图，将像素反投影（Unproject）到 3D 空间，在空白区域生成新的高斯球。</li>
+<li><strong>深度不确定性</strong>：对于深度缺失或噪声大的区域（如物体边缘、反光面），初始化的方差应设得较大。</li>
+</ul>
+</li>
+<li><strong>致密化与剪枝 (Densification &amp; Pruning)</strong>：<ul>
+<li><strong>Clone/Split</strong>：策略与原始 3DGS 类似，基于位置梯度。</li>
+<li><strong>Pruning</strong>：SLAM 中极其重要。必须及时剔除那些被判定为“遮挡”或“错误深度”的高斯，否则地图会因噪点积累而产生严重的“雾化”现象。</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="73">7.3 主流方案深度剖析</h2>
+<h3 id="731-gs-slam-splatamrgb-d">7.3.1 GS-SLAM 与 SplaTAM：RGB-D 的标准范式</h3>
+<p>这两项工作（CVPR 2024 等）奠定了 RGB-D GS-SLAM 的基础。</p>
+<ul>
+<li>
+<p><strong>SplaTAM 的“自由空间”约束</strong>：
+    SplaTAM 引入了一个显式的先验：如果深度传感器告诉我们前方 2 米是空的，那么相机到 2 米之间的光线穿透率（Transmittance）应该接近 1。
+    $$ \mathcal{L}_{empty} = \sum_{samples} \alpha_i \approx 0 $$
+    这有效地消除了相机前方的漂浮伪影（Floaters）。</p>
+</li>
+<li>
+<p><strong>GS-SLAM 的自适应扩张</strong>：
+    GS-SLAM 提出了一种基于几何误差的扩张策略。当渲染深度与观测深度不一致时，说明该处缺乏几何描述，系统会强制在该区域生成新的高斯，而不仅仅依赖颜色梯度。</p>
+</li>
+</ul>
+<h3 id="732-gs-slam">7.3.2 单目 GS-SLAM：尺度与深度的博弈</h3>
+<p>单目（Monocular）SLAM 没有真实的深度输入，直接运行 3DGS 会导致尺度模糊和深度坍塌。</p>
+<ul>
+<li><strong>MonoGS / Gaussian-SLAM</strong>：通常引入单目深度估计网络（如 Depth Anything, ZoeDepth）作为伪真值（Pseudo-GT）。</li>
+<li><strong>尺度对齐</strong>：由于单目深度网络的尺度是相对的，系统需要实时计算一个缩放因子 $s$ 和偏移 $b$，将预测深度 $D_{pred}$ 对齐到当前的地图尺度：$D_{map} \approx s \cdot D_{pred} + b$。</li>
+</ul>
+<h3 id="733-rtg-slam">7.3.3 RTG-SLAM 与紧凑化</h3>
+<p>为了在大场景下保持实时性，<strong>RTG-SLAM</strong> 限制了高斯球的总量。</p>
+<ul>
+<li>它不追求完美的纹理复现，而是追求几何结构的准确性。</li>
+<li>引入了<strong>结构化高斯</strong>的思想，对于平坦区域（墙面、地面），强制将高斯球压扁（Scaling 的一个轴趋近于 0），用更少的高斯覆盖更大的面积。</li>
+</ul>
+<hr />
+<h2 id="74-slam">7.4 动态环境下的 SLAM</h2>
+<p>真实场景中充满了行人、宠物和移动的家具。动态物体会污染 SLAM 的地图（留下残影）并干扰 Tracking（导致定位漂移）。</p>
+<h3 id="741">7.4.1 动态检测策略</h3>
+<p>如何在没有标注的情况下发现动态物体？</p>
+<ol>
+<li>
+<p><strong>光度/几何残差法</strong>：
+    在 Tracking 收敛后，计算残差图 $R = |I_{gt} - I_{render}|$。如果是静态场景，残差应服从高斯噪声分布。如果某块区域残差异常大（Outliers），则判定为动态。</p>
+</li>
+<li>
+<p><strong>语义辅助法</strong>：
+    利用 YOLO 或 Mask2Former，检测“人”、“车”、“猫”等潜在动态类别。</p>
+</li>
+</ol>
+<h3 id="742">7.4.2 动静分离架构</h3>
+<p>处理动态物体的终极方案是<strong>双流（Two-stream）设计</strong>：</p>
+<ul>
+<li><strong>Static Map</strong>：仅包含背景高斯。用于相机 Tracking。</li>
+<li><strong>Dynamic Map</strong>：包含移动物体的高斯。</li>
+<li><strong>Pipeline</strong>：<ol>
+<li>输入帧 $I_t$。</li>
+<li>使用上一帧的运动模型预测动态物体的 Mask。</li>
+<li>仅使用 Static Mask 区域的像素进行 Camera Pose Optimization。</li>
+<li>剩余像素用于更新 Dynamic Map（或直接丢弃，如果不关心动态重建）。</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p><strong>Gotcha</strong>：即使使用了语义 Mask，物体的<strong>阴影</strong>投射在静态地面上，也会产生光度误差。高级的系需要将阴影也建模为外观变化，或者使用对光照不敏感的特征（如 Feature Metric SLAM）进行跟踪。</p>
+</blockquote>
+<hr />
+<h2 id="75">7.5 进阶话题：回环检测与子图融合</h2>
+<p>传统的 3DGS 是一张全局的大图。但在 SLAM 中，长时间运行会产生累积漂移（Drift）。当回到原点时，如果不做处理，会出现“双重影”。</p>
+<h3 id="751-sub-map">7.5.1 子图（Sub-map）策略</h3>
+<p>为了解决漂移，现代 3DGS-SLAM（如 2025 年的 Multi-Map Approaches）倾向于使用子图：</p>
+<ol>
+<li>将整个轨迹切分为若干个局部子图（Local Sub-maps）。</li>
+<li>每个子图有自己的局部坐标系和一组高斯球。</li>
+<li><strong>回环检测 (Loop Closure)</strong>：使用 BoW (Bag of Words) 或 NetVLAD 检索历史关键帧。</li>
+<li><strong>位姿图优化 (Pose Graph Optimization, PGO)</strong>：当检测到回环，计算相对位姿变换，优化全局的关键帧位姿。</li>
+</ol>
+<h3 id="752-map-merging">7.5.2 地图融合 (Map Merging)</h3>
+<p>PGO 优化了关键帧位姿后，如何修正高斯地图？</p>
+<ul>
+<li><strong>刚性变换</strong>：如果子图小，可以直接将整个子图的高斯球坐标乘以新的变换矩阵 $T_{optimized}$。</li>
+<li><strong>非刚性变形 (Non-rigid Deformation)</strong>：更精细的方法是根据控制点（Control Points）的位移，对空间中的高斯球场进行插值变形（Warping），使闭环处的接缝平滑融合。</li>
+</ul>
+<hr />
+<h2 id="76">7.6 本章小结</h2>
+<ul>
+<li><strong>范式转变</strong>：3DGS-SLAM 将三维重建从“离线、全量”推向了“在线、增量”。</li>
+<li><strong>性能权衡</strong>：利用高斯球的快速渲染实现实时跟踪，但需要精细的显存管理（剪枝）以防止内存爆炸。</li>
+<li><strong>RGB-D 是主流</strong>：目前最鲁棒的系统仍依赖深度相机。单目系统需要借助深度估计网络。</li>
+<li><strong>动态与回环</strong>：这是从 Demo 走向实用的关键。动静分离解决干扰，子图融合解决漂移。</li>
+</ul>
+<hr />
+<h2 id="77-gotchas">7.7 常见陷阱与调试技巧 (Gotchas)</h2>
+<h3 id="1">1. 深度图的预处理陷阱</h3>
+<ul>
+<li><strong>问题</strong>：商业深度相机（Realsense/Kinect）在物体边缘会有严重的“飞点”或噪声，且对黑色物体、反光面失效（深度为 0）。</li>
+<li><strong>后果</strong>：如果在这些位置初始化高斯，会在空中产生大量垃圾伪影，遮挡视线。</li>
+<li><strong>技巧</strong>：必须对深度图进行腐蚀（Erosion）操作和双边滤波（Bilateral Filter），并设置严格的有效深度阈值（如 0.2m - 5.0m），丢弃过远或无效的深度值。</li>
+</ul>
+<h3 id="2">2. 学习率的敏感性</h3>
+<ul>
+<li><strong>问题</strong>：Tracking 经常跟丢（Loss 突然爆炸）。</li>
+<li><strong>原因</strong>：Tracking 的学习率（针对 Pose）和 Mapping 的学习率（针对 Gaussians）如果不匹配，会导致“地图追着相机跑”或“相机剧烈震荡”。</li>
+<li><strong>技巧</strong>：Tracking 的 LR 通常需要随迭代次数衰减。且在 Mapping 阶段，新添加的高斯的 Opacity 应该从低值开始 warm-up，避免突然遮挡已有的正确几何。</li>
+</ul>
+<h3 id="3-z-fighting">3. "Z-fighting" 与地图重叠</h3>
+<ul>
+<li><strong>问题</strong>：在回环处，新旧地图重叠，渲染时出现闪烁。</li>
+<li><strong>原因</strong>：两个高斯球在同一位置，深极度接近，Rasterizer 排序不稳定。</li>
+<li><strong>技巧</strong>：这通常需要后端融合（Merge）逻辑，检测空间上重叠度极高的高斯球（位置近、协方差相似、颜色相似），将其合并为一个，减少冗余。</li>
+</ul>
+<h3 id="4-oom-out-of-memory">4. 显存 OOM (Out Of Memory)</h3>
+<ul>
+<li><strong>调试</strong>：不要在此刻相信 PyTorch 的自动显存管理。在 SLAM 循环中，显存只会增加。</li>
+<li><strong>技巧</strong>：<ul>
+<li>定期调用 <code>torch.cuda.empty_cache()</code>。</li>
+<li>实现严格的<strong>视锥体剔除</strong>：只将当前相机视野内的高斯加载到优化器中，其他高斯 "冻结" 或卸载到 CPU 内存。</li>
+</ul>
+</li>
+</ul>
+            </article>
+            
+            <nav class="page-nav"><a href="chapter6.html" class="nav-link prev">← 第 6 章 · 动态场景与 4D Gaussian Splatting</a><a href="chapter8.html" class="nav-link next">第 8 章 · 生成式与扩散 3DGS：DreamGaussian, DiffusionGS 与 DiffGS →</a></nav>
+        </main>
+    </div>
+</body>
+</html>

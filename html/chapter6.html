@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="./">
+    <title>第 6 章 · 动态场景与 4D Gaussian Splatting</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/highlight.css">
+    <script src="assets/script.js" defer></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                processEscapes: false,
+                packages: {'[+]': ['noerrors', 'ams']}
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            loader: {
+                load: ['[tex]/noerrors', '[tex]/ams']
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3>目录</h3>
+                <button id="sidebar-toggle" class="sidebar-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <div class="sidebar-search">
+                <input type="text" id="sidebar-search-input" placeholder="搜索..." autocomplete="off">
+            </div>
+            <div id="tree-container">
+                <nav class="tree-nav" role="tree">
+                    <div class="tree-item " >
+                        <a href="index.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">3D Gaussian Splatting：从原理到实践（2025 版）</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter1.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 1 章 · 3DGS 与三维重建概览 —— 从 NeRF 到 Splat 的大图景</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter2.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 2 章 · 数学基础与渲染管线：3DGS 的心脏</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter3.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 3 章 · 数据与工具链：从多视到可训练场景</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter4.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 4 章 · 从零实现一个最小 3DGS 系统</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter5.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 5 章 · 结构化与可扩展 3DGS：Scaffold-GS 与层次化表达</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item active" >
+                        <a href="chapter6.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 6 章 · 动态场景与 4D Gaussian Splatting</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter7.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 7 章 · 3DGS + SLAM：GS-SLAM, RTG-SLAM 与在线重建</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter8.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 8 章 · 生成式与扩散 3DGS：DreamGaussian, DiffusionGS 与 DiffGS</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter9.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 9 章 · 语言与语义 3DGS：构建可交互的 3D 语言场</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter10.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 10 章 · 通用/前馈 3DGS 与非配准数据：AnySplat 与场景泛化</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter11.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 11 章 · 多遍历自动驾驶场景：MTGS 与城市级动态重建</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter12.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 12 章 · 工程实践、综合项目与未来方向</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="CLAUDE.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">Untitled</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </nav>
+        
+        <main class="content">
+            <article>
+                <h1 id="6-4d-gaussian-splatting">第 6 章 · 动态场景与 4D Gaussian Splatting</h1>
+<blockquote>
+<p><strong>本章摘要</strong>：
+现实世界很少是完全静止的。本章将打破 3DGS 的“静态假设”，深入探讨如何在时间维度上扩展高斯表达。</p>
+<p>我们将首先剖析动态场景重建中的核心矛盾：<strong>拟合能力 vs. 时间一致性</strong>。随后，我们将详细拆解解决该问题的三大数学范式：<strong>拉格朗日视角（基于形变）</strong>、<strong>欧拉/时空视角（基于 4D 原语）</strong> 以及 <strong>混合视角（静态/动态解耦）</strong>。</p>
+<p>特别地，本章将重点介绍 <strong>HexPlane</strong> 加速结构、<strong>4D 旋转切片</strong> 原理，以及 2025 年前后的前沿工作——如 <strong>WorldSplat</strong> 如何结合生成模型解决自动驾驶场景中的“物体消失”与背景修复问题。</p>
+<p><strong>学习目标</strong>：</p>
+<ol>
+<li>理解 3DGS 处理动态场景时的“幽灵影”与“模糊”成因。</li>
+<li>掌握 <strong>形变场 (Deformation Field)</strong> 与 <strong>规范空间 (Canonical Space)</strong> 的设计模式。</li>
+<li>深入理解 <strong>原生 4D Gaussian</strong> 的数学表达，特别是协方差矩阵的时间切片（Slicing）推导。</li>
+<li>学会构建 <strong>静态/动态双流系统</strong>，并在自动驾驶场景中处理刚体运动。</li>
+<li>了解结合 Diffusion 模型的生成式背景修复流程。</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="61">6.1 静态假设的破裂：从“拍照”到“录像”</h2>
+<p>在第 2 章中，我们定义了 3DGS 的核心是一个从位置 $x$ 到颜色 $c$ 和密度 $\alpha$ 的映射。如果场景是静止的，这个映射是固定的。然而，一旦引入时间 $t$，我们面临着全新的挑战。</p>
+<h3 id="611-ghosting-blurring">6.1.1 幽灵影 (Ghosting) 与 模糊 (Blurring)</h3>
+<p>如果我们强行用一组静态的高斯球去拟合一段包含移动物体的视频，优化器会陷入两难：</p>
+<ol>
+<li><strong>幽灵影 (Ghosting)</strong>：如果物体移动很快且帧率较低，优化器会在物体轨迹的每一个位置成一组半透明的高斯。看起来就像物体留下了长长的残影。</li>
+<li><strong>时间平均模糊 (Temporal Blurring)</strong>：如果物体移动较慢或帧率很高，优化器会试图“平均”每一帧的颜色。结果是生成一个巨大的、极其膨胀的高斯球，笼罩整个运动轨迹，导致细节完全丢失。</li>
+</ol>
+<h3 id="612-vs">6.1.2 核心矛盾：显存 vs. 连续性</h3>
+<p>最暴力的解法是：每一帧训练一个独立的 3DGS 模型。</p>
+<ul>
+<li><strong>优点</strong>：画质极高，完全拟合。</li>
+<li><strong>缺点</strong>：显存爆炸（每秒 30 个模型），且帧与帧之间毫无关联（时间不一致），播放时会产生剧烈的闪烁（Flickering）。</li>
+</ul>
+<p>因此，动态 3DGS 的核心任务是：<strong>寻找一种紧凑的表达，既能复用大部分信息（静态背景），又能平滑地描述随时间变化的部分。</strong></p>
+<hr />
+<h2 id="62-deformation-fields">6.2 范式一：拉格朗日视角 —— 形变场 (Deformation Fields)</h2>
+<p>这种方法继承自 NeRF 时代的 D-NeRF。其核心思想是：<strong>高斯本身不随时间产生与亡，它们只是在空间中“流动”。</strong></p>
+<h3 id="621">6.2.1 规范空间与观测空间</h3>
+<p>我们定义两个空间：</p>
+<ol>
+<li><strong>规范空间 (Canonical Space)</strong>：$t=0$ 或一个抽象的参考时刻。这里存储着高斯的“原始状态” $\mu_{can}, \Sigma_{can}, c_{can}$。</li>
+<li><strong>观测空间 (Observation/Deformed Space)</strong>：$t=t_i$ 时刻，我们实际看到的场景。</li>
+</ol>
+<p>我们需要一个函数 $\Phi$，将高斯从规范空间“推”到观测空间：
+$$
+\begin{aligned}
+(\Delta \mu, \Delta r, \Delta s) &amp;= \Phi(x_{can}, t) \\
+\mu_{obs} &amp;= \mu_{can} + \Delta \mu \\
+r_{obs} &amp;= r_{can} + \Delta r \\
+s_{obs} &amp;= s_{can} + \Delta s
+\end{aligned}
+$$
+其中 $r$ 是旋转（四元数），$s$ 是缩放。</p>
+<h3 id="622-hexplane-k-planes">6.2.2 加速核心：HexPlane / K-Planes</h3>
+<p>早期的 $\Phi$ 是一个巨大的 MLP，速度很慢。为了保持 3DGS 的实时性，<strong>HexPlane (六平面)</strong> 或 <strong>K-Planes</strong> 结构成为 2024 年以后的标准配置。</p>
+<p>我们不直接用 MLP 处理 $(x,y,z,t)$，而是将 4D 时空分解为 6 个 2D 面：</p>
+<ul>
+<li>空间平面：$XY, XZ, YZ$</li>
+<li>时空平面：$XT, YT, ZT$</li>
+</ul>
+<p>对于一个点 $q=(x,y,z,t)$，其特征向量 $F$ 计算如下：
+$$
+F(q) = \prod_{plane \in \{xy, \dots, zt\}} \text{Interp}(M_{plane}, \text{proj}_{plane}(q))
+$$
+最后只用一个极小的 MLP 将特征 $F(q)$ 解码为位移 $\Delta \mu$。</p>
+<blockquote>
+<p><strong>Rule of Thumb (HexPlane 设计)</strong>：
+在实践中，空间平面 ($XY, \dots$) 分辨率通常较高（如 $2048^2$），捕捉细节；而时空平面 ($XT, \dots$) 分辨率较低（如 $256 \times T$），捕捉运动。这种<strong>各向异性分辨率</strong>设计是平衡显存与质量的关键。</p>
+</blockquote>
+<h3 id="623">6.2.3 局限性</h3>
+<p>形变场非常适合<strong>非刚性形变</strong>（如飘动的旗帜、面部表情）。但对于<strong>拓扑结构变化</strong>（如倒水、切开蛋糕）处理很差，因为很难用连续函数模拟“分裂”。</p>
+<hr />
+<h2 id="63-4d-gaussian-splatting">6.3 范式二：欧拉/时空视角 —— 原生 4D Gaussian Splatting</h2>
+<p>这是 2024-2025 年的一个重要理论突破（代表作：Spacetime Gaussians, 4D-GS）。
+思路：<strong>不要把时间当作外部变量，直接把高斯定义在 4D 空间中。</strong></p>
+<h3 id="631-4d">6.3.1 4D 椭球定义</h3>
+<p>一个 4D 高斯由 4D 均值 $\mu_{4D} = (\mu_x, \mu_y, \mu_z, \mu_t)$ 和 $4 \times 4$ 协方差矩阵 $\Sigma_{4D}$ 定义。
+$$
+\Sigma_{4D} = R_{4D} S_{4D} S_{4D}^T R_{4D}^T
+$$
+这里 $R_{4D}$ 是 4D 旋转矩阵，$S_{4D}$ 是对角缩放矩阵。</p>
+<h3 id="632-slicing">6.3.2 渲染：时间切片 (Slicing)</h3>
+<p>当我们渲染 $t_{now}$ 时刻的图像时，本质上是用超平面 $t = t_{now}$ 去“切”这个 4D 椭球。
+根据高斯分布的边缘化与条件化性质，切片后的结果<strong>仍然是一个 3D 高斯</strong>。</p>
+<p>假设我们将 $\mu$ 和 $\Sigma$ 分块：
+$$
+\mu_{4D} = \begin{bmatrix} \mu_{xyz} \\ \mu_t \end{bmatrix}, \quad
+\Sigma_{4D} = \begin{bmatrix} A &amp; B \\ B^T &amp; D \end{bmatrix}
+$$
+其中 $A$ 是 $3 \times 3$ 空间协方差，$D$ 是 $1 \times 1$ 时间方差。
+在 $t = t_{now}$ 处的切片 3D 高斯参数为：
+$$
+\begin{aligned}
+\mu'_{xyz} &amp;= \mu_{xyz} + B D^{-1} (t_{now} - \mu_t) \\
+\Sigma'_{xyz} &amp;= A - B D^{-1} B^T
+\end{aligned}
+$$
+<strong>公式直觉</strong>：</p>
+<ul>
+<li>新的中心 $\mu'$ 会根据时间差 $(t_{now} - \mu_t)$ 和时空相关性 $B$ 进行线性偏移。这就是运动的来源！</li>
+<li>新的协方差 $\Sigma'$ 会比原始空间协方差 $A$ 小（减去了一项），这体现了切片操作确定了时间，减少了不确定性。</li>
+</ul>
+<h3 id="633-4dgs">6.3.3 4DGS 的优势</h3>
+<ul>
+<li><strong>解析解</strong>：不需要神经网络去预测位移，运动完全由 $R_{4D}$ 矩阵编码。</li>
+<li><strong>极其高效</strong>：推理时只需做矩阵运算，不用跑 MLP。</li>
+<li><strong>能处理出现/消失</strong>：通过 $Opacity(t)$ 函数，或者简单地将 $\mu_t$ 移出渲染时间范围，即可实现物体的自然生灭。</li>
+</ul>
+<hr />
+<h2 id="64">6.4 范式三：工程解耦 —— 静态背景 + 动态物体</h2>
+<p>在自动驾驶和大规模场景重建（如 WorldSplat, Street Gaussians）中，纯数学方法往往不如<strong>结构化解耦</strong>有效。</p>
+<h3 id="641-dual-stream-architecture">6.4.1 双流架构 (Dual-Stream Architecture)</h3>
+<p>我们将场景强制拆解为两组高斯：
+$$
+I = \text{Blend}(I_{static}, I_{dynamic}, \text{Mask})
+$$</p>
+<ol>
+<li><strong>Static Gaussians</strong>：<ul>
+<li>参数：$\mu, \Sigma, c$ (常数)。</li>
+<li>约束：只能优化位置和颜色，不能随时间动。</li>
+</ul>
+</li>
+<li><strong>Dynamic Gaussians</strong>：<ul>
+<li>参数：可以是 Deformable GS，也可以是附着在 Object Coordinates 上的刚体 GS。</li>
+<li>约束：通常绑定了 bounding box。</li>
+</ul>
+</li>
+</ol>
+<h3 id="642-object-centric-modeling">6.4.2 刚体运动与 Object-Centric Modeling</h3>
+<p>对于汽车，我们不需要学习每个顶点的形变，只需要学习车的 <strong>Pose</strong>。
+$$
+\mu_{world}(t) = R_{car}(t) \cdot \mu_{local} + T_{car}(t)
+$$</p>
+<ul>
+<li>训练时，我们将点云变换到车的局部坐标系初始化高斯。</li>
+<li>每一帧只优化 $R_{car}(t)$ 和 $T_{car}(t)$（6个参数），而不是优化几万个高斯的位移。这极大地稳定了训练。</li>
+</ul>
+<h3 id="643">6.4.3 常见伪影处理：天空与阴影</h3>
+<ul>
+<li><strong>天空</strong>：通常设为超远距离的大高斯球，或者使用 Environment Map 建模。</li>
+<li><strong>动态阴影</strong>：这是个难点。阴影是投射在静态路面上的动态纹理。<ul>
+<li><em>技巧</em>：允许静态路面高斯的颜色 $c$ 随时间微小变化（Spherical Harmonics 系数随 $t$ 变化），或者专门训练一个 "Shadow Field"。</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="65-2025-worldsplat">6.5 2025 前沿：WorldSplat 与生成式修复</h2>
+<p>到了 2025 年，研究不再满足于“复现录像”，而是要求“构建可编辑的世界”。<strong>WorldSplat</strong> 是处理<strong>多遍历 (Multi-traversal)</strong> 数据的代表。</p>
+<h3 id="651">6.5.1 场景：消失的红车</h3>
+<p>假设采集车第一天经过路口，路边停着一辆红车；第二天经过，红车走了。</p>
+<ul>
+<li>如果直接合并数据：红车会变成半透明幽灵。</li>
+<li>如果简单删除红车：红车原来的位置会留下一个“黑洞”，因为相机没拍到过红车背后的墙。</li>
+</ul>
+<h3 id="652-pipeline-">6.5.2 Pipeline：检测-删除-生成</h3>
+<p>WorldSplat 提出了一套闭环流程：</p>
+<ol>
+<li><strong>4D 标注/聚类</strong>：利用 4DGS 的运动特性或语义特征（LangSplat），自动识别出“红车”是瞬态物体。</li>
+<li><strong>擦除</strong>：从高斯列表中硬除属于红车的高斯。</li>
+<li><strong>生成式补全 (Inpainting)</strong>：<ul>
+<li>将当前视角渲染出带有“空洞”的 RGB 图像。</li>
+<li>使用 <strong>ControlNet / Stable Diffusion</strong> 对空洞进行 Inpainting，生成合理的背景（如延续路边的围墙纹理）。</li>
+<li>将生成的像素作为新的“伪真值 (Pseudo-GT)”。</li>
+</ul>
+</li>
+<li><strong>重训练</strong>：在空洞区域初始化新的 Static Gaussians，并利用 Pseudo-GT 进行训练。</li>
+</ol>
+<p>这一流程标志着 3DGS 从 <strong>Discriminative（判别式/拟合）</strong> 走向 <strong>Generative（生成式）</strong> 的融合。</p>
+<hr />
+<h2 id="66">6.6 本章小结</h2>
+<p>| 维度 | 形变场 (Deformation) | 4D 高斯 (Spacetime) | 静态/动态解耦 (Decoupling) |</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">维度</th>
+<th style="text-align: left;">形变场 (Deformation)</th>
+<th style="text-align: left;">4D 高斯 (Spacetime)</th>
+<th style="text-align: left;">静态/动态解耦 (Decoupling)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>数学核心</strong></td>
+<td style="text-align: left;">$x(t) = x_0 + MLP(t)$</td>
+<td style="text-align: left;">4D 椭球切片</td>
+<td style="text-align: left;">$I = I_s + I_d$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>优势</strong></td>
+<td style="text-align: left;">适合非刚性形变（人脸、衣服）</td>
+<td style="text-align: left;">数学优雅，推理极快</td>
+<td style="text-align: left;">适合自动驾驶、刚体控制</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>劣势</strong></td>
+<td style="text-align: left;">训练慢，无法处理拓扑变化</td>
+<td style="text-align: left;">实现复杂，显存占用略高</td>
+<td style="text-align: left;">需要 Mask 或 BBox 先验</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>典型应用</strong></td>
+<td style="text-align: left;">虚拟人、短视频特效</td>
+<td style="text-align: left;">通用动态场景</td>
+<td style="text-align: left;">自动驾驶仿真、SLAM</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键公式回顾</strong>：</p>
+<ul>
+<li><strong>HexPlane 特征</strong>：$F = \text{interp}(XY) \cdot \text{interp}(XT) \cdots$</li>
+<li><strong>4D切片均值</strong>：$\mu' = \mu_{xyz} + B D^{-1} (t - \mu_t)$</li>
+<li><strong>场景流损失</strong>：$\mathcal{L}_{flow} = | \text{Proj}(\mu_{t+1}) - \text{Proj}(\mu_t) - \text{OpticalFlow} |$</li>
+</ul>
+<hr />
+<h2 id="67-gotchas">6.7 常见陷阱与错误 (Gotchas)</h2>
+<h3 id="1-floaters">1. “浮游生物” (Floaters) 爆炸</h3>
+<ul>
+<li><strong>现象</strong>：动态场景训练中，相机近处出现大量细碎的、杂乱的高斯，像飞舞的灰尘。</li>
+<li><strong>原因</strong>：动态模型为了解释视频中的高频噪声或无法拟合的区域，在相机前方生成了瞬态高斯。</li>
+<li><strong>对策</strong>：<ul>
+<li>引入 <strong>Sparsity Loss</strong>（稀疏性损失）：惩罚透明度低的高斯数量。</li>
+<li>引入 <strong>Smoothness Loss</strong>（平滑性损失）：惩罚相邻时间步之间加速度过大的高斯。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-temporal-overfitting">2. 时间过拟合 (Temporal Overfitting)</h3>
+<ul>
+<li><strong>现象</strong>：训练集看着完美，测试集（如插帧 $t=0.5$）画面崩坏。</li>
+<li><strong>原因</strong>：形变网络记住了每个整数帧的状态，而在非整数帧位置行为不可控。</li>
+<li><strong>对策</strong>：<ul>
+<li>降低形变网络（如 HexPlane）的时间分辨率。</li>
+<li><strong>关键</strong>：随机采样非整数时间 $t$ 进行训练（如果数据允许），或者对 $t$ 加微小抖动（Jitter）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-slam">3. SLAM 中的动态物体干扰</h3>
+<ul>
+<li><strong>现象</strong>：在跑 GS-SLAM 时，如果有人走过，整个地图的轨迹都歪了。</li>
+<li><strong>原因</strong>：SLAM 前端把移动的人当成了特征点，误以为是相机在动。</li>
+<li><strong>对策</strong>：必须先做 <strong>Motion Segmentation</strong>。凡是 Mask 内的像素，不参与 Camera Pose 的优化，仅参与地图更新（或者直接丢弃）。</li>
+</ul>
+<h3 id="4-4d">4. 4D 旋转矩阵的陷阱</h3>
+<ul>
+<li><strong>问题</strong>：在实现 4DGS 时，如果直接优化 $4 \times 4$ 矩阵，很容易导致协方差非正定。</li>
+<li><strong>对策</strong>：始终构造 $R$ (旋转) 和 $S$ (缩放) 分别优化。对于 4D 旋转，建议分解为 <strong>3D 空间旋转</strong> 和 <strong>6 个双平面旋转 (Bi-plane rotations)</strong> 的组合，以保证数值稳定性。</li>
+</ul>
+<hr />
+<p><a href="chapter5.html">&lt; 第 5 章：结构化与可扩展 3DGS</a> | <a href="index.html">目录</a> | <a href="chapter7.html">第 7 章：3DGS + SLAM &gt;</a></p>
+            </article>
+            
+            <nav class="page-nav"><a href="chapter5.html" class="nav-link prev">← 第 5 章 · 结构化与可扩展 3DGS：Scaffold-GS 与层次化表达</a><a href="chapter7.html" class="nav-link next">第 7 章 · 3DGS + SLAM：GS-SLAM, RTG-SLAM 与在线重建 →</a></nav>
+        </main>
+    </div>
+</body>
+</html>

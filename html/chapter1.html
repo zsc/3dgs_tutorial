@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="./">
+    <title>第 1 章 · 3DGS 与三维重建概览 —— 从 NeRF 到 Splat 的大图景</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/highlight.css">
+    <script src="assets/script.js" defer></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                processEscapes: false,
+                packages: {'[+]': ['noerrors', 'ams']}
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            loader: {
+                load: ['[tex]/noerrors', '[tex]/ams']
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3>目录</h3>
+                <button id="sidebar-toggle" class="sidebar-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <div class="sidebar-search">
+                <input type="text" id="sidebar-search-input" placeholder="搜索..." autocomplete="off">
+            </div>
+            <div id="tree-container">
+                <nav class="tree-nav" role="tree">
+                    <div class="tree-item " >
+                        <a href="index.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">3D Gaussian Splatting：从原理到实践（2025 版）</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item active" >
+                        <a href="chapter1.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 1 章 · 3DGS 与三维重建概览 —— 从 NeRF 到 Splat 的大图景</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter2.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 2 章 · 数学基础与渲染管线：3DGS 的心脏</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter3.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 3 章 · 数据与工具链：从多视到可训练场景</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter4.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 4 章 · 从零实现一个最小 3DGS 系统</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter5.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 5 章 · 结构化与可扩展 3DGS：Scaffold-GS 与层次化表达</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter6.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 6 章 · 动态场景与 4D Gaussian Splatting</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter7.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 7 章 · 3DGS + SLAM：GS-SLAM, RTG-SLAM 与在线重建</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter8.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 8 章 · 生成式与扩散 3DGS：DreamGaussian, DiffusionGS 与 DiffGS</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter9.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 9 章 · 语言与语义 3DGS：构建可交互的 3D 语言场</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter10.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 10 章 · 通用/前馈 3DGS 与非配准数据：AnySplat 与场景泛化</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter11.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 11 章 · 多遍历自动驾驶场景：MTGS 与城市级动态重建</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter12.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 12 章 · 工程实践、综合项目与未来方向</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="CLAUDE.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">Untitled</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </nav>
+        
+        <main class="content">
+            <article>
+                <h1 id="1-3dgs-nerf-splat">第 1 章 · 3DGS 与三维重建概览 —— 从 NeRF 到 Splat 的大图景</h1>
+<h2 id="11">1.1 开篇：图形学的“不可能三角”被打破</h2>
+<p>在计算机图形学和三维视觉的长期探索中，我们始终在一个“不可能三角”中做权衡：</p>
+<ol>
+<li><strong>照片级真实感 (Photorealism)</strong>：能否以假乱真？</li>
+<li><strong>实时渲染速度 (Real-time Rendering)</strong>：能否达到 30fps 甚至 60fps+？</li>
+<li><strong>训练/构建效率 (Training Efficiency)</strong>：重建一个场景需要几分钟还是几天？</li>
+</ol>
+<p><strong>传统图形学</strong>（基于 Mesh 和纹理）做到了实时，但难以自动处理复杂的真实世界光影；<strong>NeRF (Neural Radiance Fields)</strong> 在 2020 年横空出世，解决了真实感问题，但其隐式表达（Implicit Representation）让实时渲和快速训练成为了噩梦。</p>
+<p><strong>2023 年，3D Gaussian Splatting (3DGS) 的出现，被视为继 NeRF 之后的第二次革命。</strong>
+它不是对 NeRF 的修补，而是从根本上改变了底层表达——放弃了“黑盒”神经网络，回归了“白盒”显式几何。它奇迹般地同时满足了上述三点：</p>
+<ul>
+<li><strong>画质</strong>：SOTA (State-of-the-Art) 级别，甚至在细节纹理上优于 NeRF。</li>
+<li><strong>速度</strong>：在消费级 GPU 上轻松达到 100fps+ (1080p)。</li>
+<li><strong>效率</strong>：训练时间从 NeRF 的“小时级”缩短到“分钟级”。</li>
+</ul>
+<p>本章将带你鸟瞰这一技术的全貌，理解它是如何将 90 年代的复古技术与现代可微编程结合，并在 2025 年演化出一个庞大的技术生态的。</p>
+<hr />
+<h2 id="12">1.2 三维重建简史：从几何到辐射场，再回归几何</h2>
+<p>要理解 3DGS 的位置，我们需要快速回顾一下历史的钟摆是如何摆动的。</p>
+<h3 id="1-sfm-mvs">1. 显式几何时代 (SfM &amp; MVS)</h3>
+<p><em>代表作：COLMAP, OpenMVS</em></p>
+<ul>
+<li><strong>逻辑</strong>：通过特征点匹配计算相机位姿，三角化生成点云，然后重建网格 (Mesh)。</li>
+<li><strong>痛点</strong>：对于弱纹理区域（白墙）、反光物体（玻璃）、细小结构（头发、电线）几乎无能为力。重建的 Mesh 往往充满破洞或噪声。</li>
+</ul>
+<h3 id="2-nerf-volumetric-rendering">2. 隐式场时代 (NeRF &amp; Volumetric Rendering)</h3>
+<p><em>代表作：NeRF, Instant-NGP, Mip-NeRF</em></p>
+<ul>
+<li><strong>逻辑</strong>：<strong>“不要问物体表面在哪里，要问光线经过这里会发生什么。”</strong><ul>
+<li>世界被建模为一个连续的函数 $F(x, y, z, \theta, \phi) \to (RGB, \sigma)$。</li>
+<li>使用 MLP（多层感知机）来拟合这个函数。</li>
+<li><strong>体渲染 (Volume Rendering)</strong>：沿着光线采样数百个点，积分颜色。</li>
+</ul>
+</li>
+<li><strong>痛点</strong>：<ul>
+<li><strong>计算量爆炸</strong>：渲染一个像素 = 跑几百次神经网络。</li>
+<li><strong>修改困难</strong>：场景被压缩在神经网络权重里，无法像编辑 Mesh 一样“删掉一把椅子”。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-3dgs">3. 显式辐射场回归 (3DGS)</h3>
+<p><em>代表作：3D Gaussian Splatting (SIGGRAPH 2023)</em></p>
+<ul>
+<li><strong>逻辑</strong>：<strong>“用带颜色的模糊毛球（高斯）填满空间，然后把它们拍扁在屏幕上。”</strong><ul>
+<li><strong>回归显式</strong>：数据不再是神经网络权重，而是数百万个具体的、离散的“高斯球”。</li>
+<li><strong>保留辐射场特性</strong>：每个高斯球带有透明度 ($\alpha$) 和视点相关颜色 (SH)，依然使用 Alpha Blending 模拟光线穿过雾气的效果，完美保留了 NeRF 的半透明和反光能力。</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="13-gaussian-splatting">1.3 核心直觉：什么是 "Gaussian Splatting"？</h2>
+<h3 id="1-3d-the-3d-gaussian">1. 场景的基本单元：3D 高斯 (The 3D Gaussian)</h3>
+<p>不同于点云中的“点”（只有一个坐标），3D 高斯是一个<strong>有体积、有方向的椭球体</strong>。
+想象一下，你手里有一团软泥：</p>
+<ul>
+<li><strong>位置 ($\mu$)</strong>：决定它在哪里。</li>
+<li><strong>协方差 ($\Sigma$)</strong>：决定你是把它搓成一个圆球，还是压扁成飞盘（模拟墙面），或者拉长成雪茄（模拟电线）。<strong>各向异性 (Anisotropy)</strong> 是 3DGS 能够用少量点拟合精细几何的关键。</li>
+<li><strong>不透明度 ($\alpha$)</strong>：决定它有多实。</li>
+<li><strong>球谐系数 (SH)</strong>：决定它的颜色随观看角度如何变化（模拟金属光泽或丝绸质感）。</li>
+</ul>
+<h3 id="2-splatting">2. 渲染机制：Splatting (抛雪球)</h3>
+<p>NeRF 是“<strong>主动去查</strong>”：光线射出去，问空间里的点“你是谁”。
+3DGS 是“<strong>被动接收</strong>”：高斯球把自己“<strong>投影</strong>”到屏幕上。</p>
+<p>这个过程被称为 <strong>Rasterization (光栅化)</strong>，其流水线如下：</p>
+<ol>
+<li><strong>视锥剔除 (Culling)</strong>：把相机背后的、看不见的高斯球扔掉。</li>
+<li><strong>投影 (Projection)</strong>：把 3D 椭球投影到 2D 屏幕平面，变成 2D 椭圆。</li>
+<li><strong>排序 (Sorting)</strong>：<strong>这是最关键的一步</strong>。将所有重叠在某个像素上的高斯球，按照深度（Z-buffer）从远到近排序。得益于 GPU 的 Radix Sort，这步极快。</li>
+<li><strong>混合 (Alpha Blending)</strong>：从前向后（或从后向前）累加颜色。</li>
+</ol>
+<h3 id="3-adaptive-density-control">3. 进化的关键：自适应密度控制 (Adaptive Density Control)</h3>
+<p>3DGS 最迷人的地方不在于渲染，而在于<strong>训练</strong>。
+除了优化位置和颜色，3DGS 还会<strong>自动改变高斯球的数量</strong>（这是 NeRF 做不到的）：</p>
+<ul>
+<li><strong>克隆 (Clone)</strong>：如果一个高斯球太小，覆盖不住几何体（Under-reconstruction），就把它复制一份，填补空隙。</li>
+<li><strong>分裂 (Split)</strong>：如果一个高斯球太大，方差过高（Over-reconstruction），说明它试图用一个大球拟合复杂的细节，那就把它切成两个小球。</li>
+<li><strong>剪枝 (Prune)</strong>：如果一个高斯球变得完全透明 ($\alpha \approx 0$) 或大得离谱，直接删除。</li>
+</ul>
+<blockquote>
+<p><strong>Rule of Thumb</strong>: 这种“分裂与克隆”机制模拟了生物细胞的繁衍。初始时只有稀疏的随机点云，随着训练进行，高斯球在细节丰富的地方（如树叶、栏杆）疯狂分裂，在平坦区域（如墙壁）保持大而稀疏。这是一种<strong>自动的资源分配</strong>。</p>
+</blockquote>
+<hr />
+<h2 id="14-nerf-vs-3dgs">1.4 深度对比：NeRF vs. 3DGS 的计算范式差异</h2>
+<p>对于工程师而言，理解两者的<strong>硬件瓶颈</strong>至关重要。</p>
+<p>| 维度 | NeRF (隐式/体渲染) | 3DGS (显式/Splatting) |</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">维度</th>
+<th style="text-align: left;">NeRF (隐式/体渲染)</th>
+<th style="text-align: left;">3DGS (显式/Splatting)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>计算模式</strong></td>
+<td style="text-align: left;"><strong>Ray Marching</strong> (光线步进)</td>
+<td style="text-align: left;"><strong>Rasterization</strong> (光栅化)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>核心操作</strong></td>
+<td style="text-align: left;">MLP 推理 (矩阵乘法)</td>
+<td style="text-align: left;">排序 (Sort) + Alpha Blend</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>硬件瓶颈</strong></td>
+<td style="text-align: left;"><strong>Compute Bound</strong> (算力受限)</td>
+<td style="text-align: left;"><strong>Memory Bandwidth Bound</strong> (显存带宽受限)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>显存占用</strong></td>
+<td style="text-align: left;">低 (MB级别，仅存权重)</td>
+<td style="text-align: left;">高 (GB级别，存数百万个高斯属性)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>空间采样</strong></td>
+<td style="text-align: left;">采样整个光线路径（含空区域）</td>
+<td style="text-align: left;">仅处理有高斯存在的区域 (Skip Empty Space)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>梯度反传</strong></td>
+<td style="text-align: left;">极慢 (需反向穿过数百次采样)</td>
+<td style="text-align: left;">极快 (仅反传给参与贡献的高斯)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>可编辑性</strong></td>
+<td style="text-align: left;">几乎为零 (Black Box)</td>
+<td style="text-align: left;">较好 (可以直接删除/移动高斯)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>为什么 3DGS 更快？</strong></p>
+<ol>
+<li><strong>跳过空空间</strong>：NeRF 即使有 Occupancy Grid 加速，依然需要在光线上做采样尝试。3DGS 直接把物体画在屏幕上，完全不计算空的地方。</li>
+<li><strong>GPU 友好</strong>：排序和光栅化是 GPU 诞生三十年来优化得最彻底的操作。</li>
+</ol>
+<hr />
+<h2 id="15-2025-demo">1.5 2025 年技术图景：从 Demo 到大规模应用</h2>
+<p>3DGS 作为一个“基础表示层”，在 2024-2025 年间迅速分化出了多个垂直领域的 SOTA 方案。以下是我们课程将重点覆盖的前沿方向：</p>
+<h3 id="1">1. 结构化与压缩：驯服显存怪兽</h3>
+<p><em>代表作：Scaffold-GS, Mini-Splatting</em>
+原始 3DGS 的文件体积巨大（一个场景 500MB+），且存在大量冗余。</p>
+<ul>
+<li><strong>Scaffold-GS</strong> 提出利用<strong>锚点 (Anchor)</strong> 来生成局部高斯，利用神经网络预测属性，大大减少了参数量，并利用视锥体感知解决了多尺度（Level-of-Detail）问题。</li>
+<li><strong>2025 趋势</strong>：结合矢量量化 (VQ) 和哈希编码，将 3DGS 压缩至 JPG 级别的体积，以便在移动端流式传输。</li>
+</ul>
+<h3 id="2-4d">2. 4D 动态世界：打破静态假设</h3>
+<p><em>代表作：4D-GS, Spacetime-GS, WorldSplat</em>
+如何重建跳舞的人或行驶的汽车？</p>
+<ul>
+<li>早期方法试图让每个高斯动起来 $(x,y,z,t)$。</li>
+<li><strong>WorldSplat (2025)</strong>：针对自动驾驶场景，不再只是简单的插值，而是结合生成模型，解决动态物体遮挡后的背景修复问题，并能在不同光照/天气下生成连贯的 4D 场景。</li>
+</ul>
+<h3 id="3-slam">3. SLAM 与 机器人：从“看”到“动”</h3>
+<p><em>代表作：GS-SLAM, SplaTAM, RTG-SLAM</em>
+传统的 SLAM 输出稀疏点云，机器人看不懂它是“墙”还是“草”。</p>
+<ul>
+<li><strong>GS-SLAM</strong>：首次实现 RGB-D 稠密建图。</li>
+<li><strong>RTG-SLAM (2025)</strong>：重点解决<strong>实时性</strong>和<strong>动态物体干扰</strong>。它能够在嵌入式 GPU (Jetson) 上运行，并具备“长期记忆”，不会因为相机快速晃动而把地图搞丢。</li>
+</ul>
+<h3 id="4">4. 语义与语言场：与大模型对话</h3>
+<p><em>代表作：LangSplat, LangSplat v2, ConceptGraphs</em>
+我们不仅希望看到颜色，还希望知道“哪部分是椅子”。</p>
+<ul>
+<li><strong>LangSplat</strong>：将 CLIP 语言特征压缩到高斯中。</li>
+<li><strong>LangSplat v2 (2025)</strong>：解决了高维特征渲染慢的问题。通过<strong>字典学习 (Dictionary Learning)</strong>，将 512 维的 CLIP 特征压缩为稀疏系数，实现了 &gt;450 FPS 的语义查询速度。你可以直接问：“把所有的红苹果变成绿色的”，系统能毫秒级响应。</li>
+</ul>
+<h3 id="5-3daigc">5. 生成式 3D：AIGC 的新载体</h3>
+<p><em>代表作：DreamGaussian, DiffusionGS, AnySplat</em></p>
+<ul>
+<li><strong>DreamGaussian</strong>：利用 3DGS 的快速初始化能力，将 Text-to-3D 的时间从几小时缩短到 2 分钟。</li>
+<li><strong>DiffusionGS</strong>：不再依靠 SDS 蒸馏，而是直接训练一个输出 3DGS 参数的 Diffusion Model。</li>
+<li><strong>AnySplat</strong>：一种前馈 (Feed-forward) 网络。给它几张照片，它直接吐出 3DGS 场景，无需训练优化。这对于瞬时三维重建意义重大。</li>
+</ul>
+<hr />
+<h2 id="16">1.6 本章小结</h2>
+<ol>
+<li><strong>历史地位</strong>：3DGS 终结了“网格光栅化”与“神经体渲染”的二元对立，融合了<strong>显式几何的效率</strong>与<strong>体渲染的可微性</strong>。</li>
+<li><strong>核心机制</strong>：各向异性 3D 高斯球 + 投影 + 排序 + Alpha 混合。</li>
+<li><strong>优化魔法</strong>：自适应密度控制（分裂/克隆）是 3DGS 能够自动拟合杂几何的根本原因。</li>
+<li><strong>工程本质</strong>：从 Compute-bound 转向 Memory-bound，对显存带宽要求高，对张量算力要求相对较低。</li>
+<li><strong>2025 展望</strong>：技术栈已从单一的重建算法演变为包含<strong>压缩、动态、语义、生成</strong>的全方位 3D 数据格式标准。</li>
+</ol>
+<hr />
+<h2 id="17-gotchas">1.7 常见陷阱与错误 (Gotchas)</h2>
+<p>在开启学习之旅前，请务必建立以下正确认知，以防掉坑：</p>
+<ul>
+<li><strong>陷阱 1：以为 3DGS 是“网格”</strong><ul>
+<li><em>现象</em>：试图把 3DGS 导入 Unity/UE 做物理碰撞（Collision）。</li>
+<li><em>真相</em>：3DGS 是一堆“云雾”，没有确定的表面。虽然视觉上看起来是实体的，但物理引擎会直接穿过去。你需要额外的算法（如 Marching Cubes）从高斯中提取 Mesh，或者使用基于粒子的物理模拟。</li>
+</ul>
+</li>
+<li><strong>陷阱 2：忽视初始化</strong><ul>
+<li><em>现象</em>：直接随机初始化高斯位置，训练结果一团糟。</li>
+<li><em>真相</em>：3DGS 是非凸优化，极其依赖初始点云（通常来自 COLMAP）。如果 SfM 失败，3DGS 必败。虽然 AnySplat 等新方法试图解决此问题，但经典管线中 SfM 仍是地基。</li>
+</ul>
+</li>
+<li><strong>陷阱 3：显存爆炸</strong><ul>
+<li><em>现象</em>：在 8GB 显存的显卡上跑大场景，直接 OOM (Out of Memory)。</li>
+<li><em>真相</em>：高斯数量增长极快。如果不加控制（正则化），它会为了拟合噪点生成数百万个微小高斯。学会调节 <code>densification_interval</code> 和 <code>opacity_reset_interval</code> 是工程必修课。</li>
+</ul>
+</li>
+<li><strong>陷阱 4：视角依赖伪影 (Floater)</strong><ul>
+<li><em>现象</em>：从训练视角看很完美，稍微转一下相机，发现空中飘着很多奇怪的色块。</li>
+<li><em>真相</em>：这是过拟合的表现。高斯球为了强行解释某个视角的像素，在相机镜头前生成了“贴图”。这在 Scaffold-GS 等结构化方法中得到了缓解。</li>
+</ul>
+</li>
+</ul>
+<p>下一章，我们将放下这些高大上的概念，拿起数学手术刀，剖析那个著名的<strong>3D到2D协方差投影公式</strong>——那是整个 3DGS 大厦的基石</p>
+            </article>
+            
+            <nav class="page-nav"><a href="index.html" class="nav-link prev">← 3D Gaussian Splatting：从原理到实践（2025 版）</a><a href="chapter2.html" class="nav-link next">第 2 章 · 数学基础与渲染管线：3DGS 的心脏 →</a></nav>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="./">
+    <title>第 11 章 · 多遍历自动驾驶场景：MTGS 与城市级动态重建</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/highlight.css">
+    <script src="assets/script.js" defer></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                processEscapes: false,
+                packages: {'[+]': ['noerrors', 'ams']}
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            loader: {
+                load: ['[tex]/noerrors', '[tex]/ams']
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3>目录</h3>
+                <button id="sidebar-toggle" class="sidebar-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <div class="sidebar-search">
+                <input type="text" id="sidebar-search-input" placeholder="搜索..." autocomplete="off">
+            </div>
+            <div id="tree-container">
+                <nav class="tree-nav" role="tree">
+                    <div class="tree-item " >
+                        <a href="index.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">3D Gaussian Splatting：从原理到实践（2025 版）</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter1.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 1 章 · 3DGS 与三维重建概览 —— 从 NeRF 到 Splat 的大图景</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter2.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 2 章 · 数学基础与渲染管线：3DGS 的心脏</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter3.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 3 章 · 数据与工具链：从多视到可训练场景</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter4.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 4 章 · 从零实现一个最小 3DGS 系统</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter5.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 5 章 · 结构化与可扩展 3DGS：Scaffold-GS 与层次化表达</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter6.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 6 章 · 动态场景与 4D Gaussian Splatting</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter7.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 7 章 · 3DGS + SLAM：GS-SLAM, RTG-SLAM 与在线重建</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter8.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 8 章 · 生成式与扩散 3DGS：DreamGaussian, DiffusionGS 与 DiffGS</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter9.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 9 章 · 语言与语义 3DGS：构建可交互的 3D 语言场</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter10.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 10 章 · 通用/前馈 3DGS 与非配准数据：AnySplat 与场景泛化</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item active" >
+                        <a href="chapter11.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 11 章 · 多遍历自动驾驶场景：MTGS 与城市级动态重建</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter12.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 12 章 · 工程实践、综合项目与未来方向</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="CLAUDE.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">Untitled</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </nav>
+        
+        <main class="content">
+            <article>
+                <h1 id="11-mtgs">第 11 章 · 多遍历自动驾驶场景：MTGS 与城市级动态重建</h1>
+<blockquote>
+<p><strong>本章摘要</strong>：
+自动驾驶与数字孪生领域的核心挑战在于处理“多遍历”（Multi-Traversal）数据——即在不同时间、天气、光照条件下多次经过同一地点的数据集。
+本章将深入探讨如何利用 3D Gaussian Splatting 构建一致的城市级地图。我们将详解 <strong>MTGS (Multi-Traversal Gaussian Splatting)</strong> 架构，剖析如何将场景解耦为<strong>共享几何（Static）</strong>、<strong>瞬态物体（Transient）</strong>与<strong>外观风格（Appearance）</strong>。此外，本章还将涵盖城市级大规模重建中的工程难题，如<strong>分块训练（Block-wise Training）</strong>、<strong>大坐标系精度问题</strong>以及<strong>天空与阴影</strong>的特殊处理。</p>
+</blockquote>
+<hr />
+<h2 id="111">11.1 场景定义：从“视重建”到“地点重建”</h2>
+<p>在前面的章节中，我们处理的大多是单一时间段的连续视频（Single Session）。然而，构建自动驾驶的高精地图或仿真环境，必须融合多次采集的数据。</p>
+<h3 id="1111">11.1.1 多遍历数据的四重挑战</h3>
+<p>假设我们有 10 段行车记录，分别采集于清晨、正午、雨天和夜晚。直接混合这些数据训练一个 Vanilla 3DGS 会导致灾难性的失败，原因如下：</p>
+<ol>
+<li><strong>几何冲突（Geometry Conflict）</strong>：<ul>
+<li><em>遍历 A</em> 中，路边停了一辆快递车。</li>
+<li><em>遍历 B</em> 中，该位置空空如也。</li>
+<li><em>结果</em>：如果强行优化，3DGS 会在该处生成一团半透明的“幽灵车”，既不完全存在也不完全消失。</li>
+</ul>
+</li>
+<li><strong>光度不一致（Photometric Inconsistency）</strong>：<ul>
+<li>同一面墙，在正午是高亮的白色（RGB: 255, 255, 255），在黄昏是橙色（RGB: 200, 100, 50）。</li>
+<li><em>结果</em>：球谐函数（SH）虽然能处理视角依赖颜色，但无法处理“时间依赖”颜色。强行融合会导致纹理模糊、对比度下降。</li>
+</ul>
+</li>
+<li><strong>位姿漂移（Pose Drift）</strong>：<ul>
+<li>不同时间段运行 COLMAP 或 SLAM，生成的轨迹无法完美对齐。厘米级的误差在 3DGS 中会导致图像模糊（Blurry）。</li>
+</ul>
+</li>
+<li><strong>尺度与显存（Scale &amp; Memory）</strong>：<ul>
+<li>城市场景动辄数公里，包含数百万帧图像。单卡显存根本无法容纳所有高斯点。</li>
+</ul>
+</li>
+</ol>
+<p><strong>核心思想</strong>：我们不再是重建“一组图片”，而是要重建<strong>这一地点的物理属性</strong>（几何、反射率），并将环境因素（光照、动态物体）作为变量剥离。</p>
+<hr />
+<h2 id="112-mtgs">11.2 MTGS 核心架构：解耦渲染管线</h2>
+<p>MTGS 及其衍生算法（如 Street Gaussians, VastGaussian 等）采用了一种<strong>“加法式”与“乘法式”结合</strong>的渲染模型。</p>
+<h3 id="1121">11.2.1 场景分解方程</h3>
+<p>我们将最终渲染出的图像 $I$ 分解为三个核心分量：</p>
+<p>$$
+I_{final} = \mathcal{M}_{tone} \left( \mathcal{R}(G_{static}) + \mathcal{R}(G_{transient}^{(t)}) \right)
+$$</p>
+<p>其中：</p>
+<ul>
+<li>$G_{static}$：<strong>全局共享静态场</strong>。包含路面、建筑、树干、红绿灯杆。这是我们真正想保留的地图。</li>
+<li>$G_{transient}^{(t)}$：<strong>特定遍历的瞬态场</strong>。包含第 $t$ 次采集时的车辆、行人、飞鸟。</li>
+<li>$\mathcal{R}(\cdot)$：可微光栅化操作（Rasterization）。</li>
+<li>$\mathcal{M}_{tone}$：<strong>外观/色调映射模块</strong>。用于模拟曝光、白平衡和天气风格。</li>
+</ul>
+<h3 id="1122">11.2.2 架构设计图</h3>
+<div class="codehilite"><pre><span></span><code>                                  +----------------------+
+                                  |   Learnable Latent   |
+                                  |   Code (Per Image)   |
+                                  +-----------+----------+
+                                              |
+Input Views (Multi-Session)                   v
+       |                          +-----------+----------+
+       +------------------------&gt; | Appearance Decoupling| &lt;--- MLP / Affine
+       |                          |       Module         |
+       v                          +-----------+----------+
++------+----------------+                     |
+|  Static Gaussians     |                     | (Color Modulation)
+| (Shared Geometry)     |                     v
++------+----------------+         +-----------+----------+
+       |                          |      Rasterizer      | ---&gt; Loss Calculation
++------+----------------+         +-----------+----------+
+| Transient Gaussians   |                     ^
+| (Session Specific)    |                     |
++-----------------------+---------------------+
+</code></pre></div>
+
+<hr />
+<h2 id="113-i-appearance-decoupling">11.3 关键技术 I：外观解耦 (Appearance Decoupling)</h2>
+<p>如何让同一组高斯在不同天气下呈现不同颜色？</p>
+<h3 id="a-mlp">方法 A：基于 MLP 的特征解码</h3>
+<p>每个高斯点不再直接存储 RGB 或 SH 系数，而是存储一个高维特征向量 $f_{feat}$。
+在渲染时，结合当前图像的<strong>外观嵌入向量（Appearance Embedding）</strong> $\ell_{img}$ 进行解码：</p>
+<p>$$ c = \text{MLP}_{\phi}(f_{feat}, \text{view_dir}, \ell_{img}) $$</p>
+<ul>
+<li><strong>优点</strong>：非线性能力强，能模拟复杂的 HDR 压缩和非物理光照变化。</li>
+<li><strong>缺点</strong>：渲染速度受限于 MLP 的推理速度（比纯 SH 慢）。</li>
+</ul>
+<h3 id="baffine-transformation">方法 B：仿射变换（Affine Transformation）—— <em>推荐用于实时应用</em></h3>
+<p>这种方法假设光照变化主要是全局的色调偏移。我们为每一张输入图像学习一个 $3 \times 4$ 的仿射变换矩阵 $A_t$ 和 $B_t$。</p>
+<ul>
+<li>先用标准 SH 渲染出“基色”图像 $I_{base}$。</li>
+<li>应用变换：$I_{final} = A_t \cdot I_{base} + B_t$。</li>
+<li><strong>优点</strong>：几乎零开销，完全实时的渲染速度。</li>
+<li><strong>Rule of Thumb</strong>：对于自动驾驶场景，仿射变换通常足以处理曝光变化，但难以处理局部阴影移动。如果追求极致真实感，需结合 MLP。</li>
+</ul>
+<hr />
+<h2 id="114-ii">11.4 关键技术 II：瞬态物体消除与管理</h2>
+<p>这是处理自动驾驶数据最棘手的部分：如何把车“变没”，同时补全车底下的路面？</p>
+<h3 id="1-semantic-masking">1. 语义掩码法 (Semantic Masking)</h3>
+<p>最直接的工程手段。利用 Mask2Former 或 SegFormer 生成 <code>Car</code>, <code>Person</code>, <code>Bus</code>, <code>Truck</code> 的掩码。</p>
+<ul>
+<li><strong>硬掩码 (Hard Mask)</strong>：在计算 Loss 时，直接忽略 Mask 区域的像素。<ul>
+<li><strong>问题</strong>：如果路边一直停着车（比如停车场），该区域永远没有观测数据，会导致地面出现空洞。</li>
+</ul>
+</li>
+<li><strong>软掩码 (Soft Weighting)</strong>：降低动态区域的 Loss 权重，而不是完全忽略。</li>
+</ul>
+<h3 id="2">2. 瞬态高斯与不确定性建模</h3>
+<p>MTGS 引入了专门的瞬态高斯 $G_{transient}$。为了防止瞬态高斯“偷懒”去拟合静态背景，必须施加<strong>强正则化</strong>：</p>
+<ul>
+<li>
+<p><strong>稀疏性损失 (Sparsity Loss)</strong>：
+$$ L_{sparse} = \lambda \sum_{i \in \text{transient}} |\alpha_i| $$
+强制瞬态高斯的不透明度 $\alpha$ 趋向于 0，除非该区域的 Loss 实在太高（即静态高斯解释不了）。</p>
+</li>
+<li>
+<p><strong>空域紧凑性</strong>：瞬态高斯倾向于聚集（因为物体是连续的），可以引入平滑性约束。</p>
+</li>
+</ul>
+<h3 id="3-generative-in-painting">3. 生成式补 (Generative In-painting)</h3>
+<p>对于“一直被遮挡”的区域（如永远停满车的路侧），2025 年的新趋势（如 WorldSplat）是结合 Diffusion Model。</p>
+<ul>
+<li><strong>Pipeline</strong>：训练 3DGS $\to$ 识别空洞/低置信度区域 $\to$ 将该视角渲染图送入 Stable Diffusion 进行 In-painting $\to$ 将补全后的图作为伪标签（Pseudo-GT）微调 3DGS。</li>
+</ul>
+<hr />
+<h2 id="115">11.5 城市级工程实现：分块与大坐标系</h2>
+<p>当场景扩展到 2km $\times$ 2km 时，工程问题便主导了算法设计。</p>
+<h3 id="1151-tiling-blocking">11.5.1 分块策略 (Tiling &amp; Blocking)</h3>
+<p>不要试图在一个 List 中存几千万个高斯。</p>
+<ol>
+<li><strong>网格划分</strong>：将 XY 平面划分为 $100m \times 100m$ 的 Tile。</li>
+<li><strong>重叠缓冲区 (Buffer Zone)</strong>：每个 Tile 在训练时，必须包含周围 10-20% 的数据作为 Context，否则拼接处会出现明显的断层（Seams）。</li>
+<li><strong>视锥剔除进阶</strong>：渲染时，不仅要判断点是否在视锥内，还要根据距离加载不同精度的 Tile（LoD 技术）。</li>
+</ol>
+<h3 id="1152-the-coordinates-trap">11.5.2 坐标系精度陷阱 (The Coordinates Trap)</h3>
+<p><strong>常见错误</strong>：直接使用 UTM 或 ECEF 坐标（数值极大，如 $x=500000.0$）。</p>
+<ul>
+<li><strong>现象</strong>：高斯在画面中抖动，无法收敛。</li>
+<li><strong>原因</strong>：<code>float32</code> 在处理大数值时精度下降（Machine Epsilon 变大），无法表示毫米级的梯度更新。</li>
+<li><strong>解决方案</strong>：<ol>
+<li><strong>相对坐标</strong>：选取场景中心作为原点 $(0,0,0)$。</li>
+<li><strong>双精度存储</strong>：在 CPU 端存储 <code>float64</code> 的中心坐标，渲染时减去相机位置，将结果转换为 <code>float32</code> 传给 GPU。</li>
+</ol>
+</li>
+</ul>
+<hr />
+<h2 id="116">11.6 天空与阴影：环境建模</h2>
+<h3 id="sky-sphere-skybox">天空球 (Sky Sphere / Skybox)</h3>
+<p>天空是无限远的，不能用 standard Gaussians 建模（否则会变成一堵近处的墙）。</p>
+<ul>
+<li><strong>做法</strong>：使用一个包围整个场景的巨大球体或 CubeMap。</li>
+<li><strong>渲染</strong>：在光栅化高斯之前或之后（取决于混合模式），通过 MLP 查询视线方向对应的天空颜色，作为背景色合成。
+$$ C_{pixel} = C_{gaussians} + (1 - \alpha_{accum}) \times C_{sky}(\text{ray_dir}) $$</li>
+</ul>
+<h3 id="shadow-handling">阴影处理 (Shadow Handling)</h3>
+<p>阴影是“静态表面上的动态纹理”。</p>
+<ul>
+<li>在 MTGS 中，阴影通常被归类为<strong>外观变化（Appearance）</strong>的一部分，由外观嵌入向量处理。</li>
+<li><strong>进阶</strong>：如果是仿真需求，需要把阴影从纹理中“烘焙”出去（De-lighting），还原路面的反照率（Albedo），以便在后续渲染中重新生成虚拟阴影。这通常需要法线监督。</li>
+</ul>
+<hr />
+<h2 id="117">11.7 本章小结</h2>
+<ol>
+<li><strong>多遍历核心</strong>：将<strong>几何</strong>（不变）与<strong>环境</strong>（变）分离。</li>
+<li><strong>外观建模</strong>：推荐使用 <strong>Affine Transformation</strong> 处理曝光，使用 <strong>MLP</strong> 处理复杂光照。</li>
+<li><strong>动态物体</strong>：结合<strong>语义 Mask</strong>（工程基线）与<strong>稀疏瞬态高斯</strong>（算法优化）是最佳实践。</li>
+<li><strong>大场景基建</strong>：必须使用<strong>分块训练</strong>和<strong>相对坐标系</strong>以避免显存溢出和精度抖动。</li>
+<li><strong>2025 趋势</strong>：结合 Diffusion Model 补全被长期遮挡的死角，以及结合 LiDAR 提高几何准确性。</li>
+</ol>
+<hr />
+<h2 id="118-gotchas">11.8 常见陷阱与错误 (Gotchas)</h2>
+<h3 id="1-street-view">1. "Street-View" 数据的透视畸变</h3>
+<ul>
+<li><strong>问题</strong>：车载相机通常是广角甚至鱼眼。如果去畸变（Undistortion）做得不好，或者边缘像素拉伸严重，会导致 3DGS 在边缘生成伪影。</li>
+<li><strong>对策</strong>：在 COLMAP 阶段精确标定内参。如果在 3DGS 中使用鱼眼相机模型（如 <code>Scaramuzza</code> 模型），效果通常优于先去畸变再训练。</li>
+</ul>
+<h3 id="2_1">2. 自动曝光导致的颜色断层</h3>
+<ul>
+<li><strong>问题</strong>：相机自动曝光（AE）导致同一段视频中亮度剧烈波动。</li>
+<li><strong>对策</strong>：如果不做 Appearance Modeling，不仅颜色不对，几何也会崩坏（优化器会移动高斯来凑颜色）。务必开启 Appearance Embedding，或者预处理时进行直方图匹配。</li>
+</ul>
+<h3 id="3-z-fighting">3. Z-Fighting (重叠闪烁)</h3>
+<ul>
+<li><strong>问题</strong>：多个 Tile 的边缘重叠处，或者 Static 与 Transient 高斯在同一深度重叠。</li>
+<li><strong>对策</strong>：在合并 Tile 时，使用严格的距离阈值剔除重复高斯；在渲染时，对 Transient Gaussians 施加微小的深度偏移（Depth Bias）以避免数值冲突。</li>
+</ul>
+<h3 id="4">4. 无法收敛的远处背景</h3>
+<ul>
+<li><strong>问题</strong>：远处的树木和建筑模糊不清，甚至全是噪点。</li>
+<li><strong>对策</strong>：这是由于采样率不足（Under-sampling）。对于自动驾驶前视视角，远处像素对应的实际物理空间极大。可以引入 <strong>Multi-Scale Gaussians</strong> 或在 Loss 中增加 LPIPS 感知损失来强化结构学习。</li>
+</ul>
+            </article>
+            
+            <nav class="page-nav"><a href="chapter10.html" class="nav-link prev">← 第 10 章 · 通用/前馈 3DGS 与非配准数据：AnySplat 与场景泛化</a><a href="chapter12.html" class="nav-link next">第 12 章 · 工程实践、综合项目与未来方向 →</a></nav>
+        </main>
+    </div>
+</body>
+</html>

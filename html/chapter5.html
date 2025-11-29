@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="./">
+    <title>第 5 章 · 结构化与可扩展 3DGS：Scaffold-GS 与层次化表达</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/highlight.css">
+    <script src="assets/script.js" defer></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                processEscapes: false,
+                packages: {'[+]': ['noerrors', 'ams']}
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            loader: {
+                load: ['[tex]/noerrors', '[tex]/ams']
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3>目录</h3>
+                <button id="sidebar-toggle" class="sidebar-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <div class="sidebar-search">
+                <input type="text" id="sidebar-search-input" placeholder="搜索..." autocomplete="off">
+            </div>
+            <div id="tree-container">
+                <nav class="tree-nav" role="tree">
+                    <div class="tree-item " >
+                        <a href="index.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">3D Gaussian Splatting：从原理到实践（2025 版）</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter1.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 1 章 · 3DGS 与三维重建概览 —— 从 NeRF 到 Splat 的大图景</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter2.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 2 章 · 数学基础与渲染管线：3DGS 的心脏</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter3.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 3 章 · 数据与工具链：从多视到可训练场景</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter4.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 4 章 · 从零实现一个最小 3DGS 系统</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item active" >
+                        <a href="chapter5.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 5 章 · 结构化与可扩展 3DGS：Scaffold-GS 与层次化表达</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter6.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 6 章 · 动态场景与 4D Gaussian Splatting</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter7.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 7 章 · 3DGS + SLAM：GS-SLAM, RTG-SLAM 与在线重建</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter8.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 8 章 · 生成式与扩散 3DGS：DreamGaussian, DiffusionGS 与 DiffGS</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter9.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 9 章 · 语言与语义 3DGS：构建可交互的 3D 语言场</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter10.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 10 章 · 通用/前馈 3DGS 与非配准数据：AnySplat 与场景泛化</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter11.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 11 章 · 多遍历自动驾驶场景：MTGS 与城市级动态重建</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="chapter12.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">第 12 章 · 工程实践、综合项目与未来方向</span>
+                        </a>
+                    </div>
+                
+                    <div class="tree-item " >
+                        <a href="CLAUDE.html" class="tree-link">
+                            <span class="tree-icon">📄</span>
+                            <span class="tree-title">Untitled</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </nav>
+        
+        <main class="content">
+            <article>
+                <h1 id="5-3dgsscaffold-gs">第 5 章 · 结构化与可扩展 3DGS：Scaffold-GS 与层次化表达</h1>
+<blockquote>
+<p><strong>本章摘要</strong>：
+随着 3DGS 应用场景从简单的物体转向大规模城市和复杂室内环境，原始（Vanilla）3DGS 的“非结构化点云”特性成为了性能与存储的瓶颈。
+本章将深度解析 <strong>Scaffold-GS</strong> 及其后续变体，探讨如何通过引入 <strong>“锚点（Anchor）- 神经高斯（Neural Gaussian）”</strong> 的层次化结构，实现<strong>存储体积减少 10-20 倍</strong>的同时提升渲染质量。
+我们还将讨论结构化表示如何解决“视角依赖的几何混叠”问题，并对比 Octree、Hash Grid 等不同空间数据结构在 3DGS 中的应用。</p>
+</blockquote>
+<hr />
+<h2 id="51-vanilla-3dgs">5.1 痛点分析：Vanilla 3DGS 的“无序之殇”</h2>
+<p>在深入新方法前，我们需要明确原始 3D Gaussian Splatting 在工程落地中面临的“三大原罪”：</p>
+<ol>
+<li>
+<p><strong>存储与传输瓶颈</strong></p>
+<ul>
+<li><strong>现象</strong>：一个高保真的城市场景可能包含 500 万到 1000 万个高斯点。每个点显式存储位置（float32 x3）、旋转（x4）、缩放（x3）、不透明度（x1）和球谐系数（SH, x48 for degree 3）。</li>
+<li><strong>后果</strong>：模型文件动辄 500MB - 2GB。这对于 Web 端加载、移动端应用或云端流式传输都是不可接受的。</li>
+<li><strong>本质</strong>：数据存在极大的<strong>冗余</strong>。相邻的高斯往往具有相似的颜色、纹理趋势和几何朝向，但 Vanilla 3DGS 并没有利用这种局部相关性。</li>
+</ul>
+</li>
+<li>
+<p><strong>抗锯齿与多尺度（LOD）缺失</strong></p>
+<ul>
+<li><strong>现象</strong>：当相机拉远时，原本密集的微小高斯在屏幕上投影小于 1 个像素。</li>
+<li><strong>后果</strong>：画面出现高频噪点（Aliasing）或闪烁，且渲染开销并不会因为物体变远而显著降低（因为主要瓶颈在排序和栅化前的投影计算）。</li>
+<li><strong>本质</strong>：缺乏<strong>层次化（Hierarchical）</strong> 表示。</li>
+</ul>
+</li>
+<li>
+<p><strong>视角依赖的伪影</strong></p>
+<ul>
+<li><strong>现象</strong>：由于高斯是半透明的，优化器常常通过“堆叠”多个高斯来“欺骗”损失函数，以模拟镜面反射（Specular）。当视角稍微偏离训练视角时，这些堆叠结构会暴露，产生“云雾状”伪影。</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="52-scaffold-gs">5.2 Scaffold-GS 核心原理：锚点与神经高斯</h2>
+<p><strong>Scaffold-GS</strong> (CVPR 2024) 提出了一种基于 <strong>锚点（Anchor）</strong> 的混合表示法。它不再直接优化数百万个高斯，而是构建了一个稀疏的脚手架（Scaffold），通过神经网络动态“生长”出高斯。</p>
+<h3 id="521">5.2.1 层次化结构图解</h3>
+<p>我们可以将场景理解为两级结构：</p>
+<div class="codehilite"><pre><span></span><code>Level 0: 稀疏锚点 (Anchors) - 显式存储
+-----------------------------------------------------------
+数据量:   约占总高斯数量的 1/10 ~ 1/20
+存储内容: [位置 P] [特征 F] [缩放 L] [旋转 Q]
+作用:     构场景的骨架，覆盖宏观几何结构
+
+          |  (解码过程: MLP + View Direction)
+          V
+
+Level 1: 神经高斯 (Neural Gaussians) - 隐式生成 (On-the-fly)
+-----------------------------------------------------------
+数据量:   每个锚点生成 K 个高斯 (例如 K=10)
+存储内容: 无 (运行时计算，用完即弃或缓存)
+特性:     
+
+  1. 位置偏移 (Offset) -&gt; 补全局部几何细节
+  2. 属性动态化 -&gt; Opacity/Color 随视角改变
+</code></pre></div>
+
+<h3 id="522">5.2.2 核心公式：解码与视点自适应</h3>
+<p>Scaffold-GS 的核心是一个轻量级的 MLP $\mathcal{F}$。对于第 $i$ 个锚点 $A_i$，给定当前相机中心 $C_{cam}$，我们首先计算相对视角方向 $v_i = \frac{C_{cam} - \mu_i}{|C_{cam} - \mu_i|}$。</p>
+<p>解码过程如下：</p>
+<p>$$
+\{ \mathcal{G}_{i,j} \}_{j=1}^K = \mathcal{F}\left( f_i, \gamma(v_i), \mu_i, l_i \right)
+$$</p>
+<p>生成的第 $j$ 个神经高斯 $\mathcal{G}_{i,j}$ 包含属性：</p>
+<ul>
+<li><strong>偏移量</strong> $\delta \mu_{i,j}$：$\mu_{i,j} = \mu_i + \delta \mu_{i,j}$</li>
+<li><strong>颜色</strong> $c_{i,j}$：替代了显式的 SH 系数</li>
+<li><strong>不透明度</strong> $\alpha_{i,j}$</li>
+<li><strong>协方差参数</strong>（缩放与旋转的修正）</li>
+</ul>
+<h4 id="view-dependent-geometry-vdg">关键创新：View-Dependent Geometry (VDG)</h4>
+<p>请注意，输入包含了视角 $v_i$。这意味着<strong>生成的神经高斯的位置和形状是可以随视角变化的！</strong></p>
+<blockquote>
+<p><strong>物理直觉</strong>：
+在现实世界中，复杂表面（如毛发、半透明材质、强反光水面）在不同角度下看起来几何轮廓是不同的。</p>
+<ul>
+<li><strong>Vanilla 3DGS</strong>：几何固定，仅靠颜色（SH）变化来模拟光影，这在很多时候是不够的。</li>
+<li><strong>Scaffold-GS</strong>：允许高斯微调其位置和形状。例如，在模拟高光移动时，不仅颜色变亮，高斯球本身可以稍微移动或压扁，以更好地捕捉高频反射。</li>
+</ul>
+</blockquote>
+<h3 id="523">5.2.3 训练时的正则化</h3>
+<p>由于神经高斯是由网络“凭空”生成的，如果不加约束，它们可能会飞到离锚点很远的地方，导致场景混乱。Scaffold-GS 引入了 <strong>体积正则化（Volume Regularization）</strong>：</p>
+<p>$$
+\mathcal{L}_{vol} = \frac{1}{|A|K} \sum_{i,j} \text{ReLU}\left( | \delta \mu_{i,j} |_2 - \lambda \cdot | l_i |_2 \right)
+$$</p>
+<ul>
+<li><strong>含义</strong>：惩罚那些跑出锚点控制范围（$l_i$）太远的子高斯。</li>
+<li><strong>效果</strong>：强制每个锚点只负责其局部的纹理和几何，保证了场景的结构化（Locality）。</li>
+</ul>
+<hr />
+<h2 id="53-octree">5.3 进阶：Octree 与多分辨率策略</h2>
+<p>除了基于 MLP 的 Scaffold-GS，<strong>Octree-GS</strong> 是另一种常见的结构化思路，它侧重于<strong>渲染效率</strong>和 <strong>Level of Detail (LOD)</strong>。</p>
+<h3 id="531-octree">5.3.1 八叉树结构 (Octree)</h3>
+<p>将 3D 空间递归划分为八个子立方体。每个叶子节点（Leaf Node）存储一组高斯。</p>
+<ul>
+<li><strong>空间索引</strong>：通过 Morton Code (Z-order curve) 将 3D 坐标映射为 1D 索引，极大提升内存访问的局部性（Cache coherency）。</li>
+<li><strong>视锥剔除（Frustum Culling）</strong>：渲染前，先判断八叉树的大节点是否在视野内。如果不在，直接丢弃该节点下所有成千上万个高斯。这比逐个高斯判断快得多。</li>
+</ul>
+<h3 id="532-lod">5.3.2 LOD 渲染策略</h3>
+<p>结构化 3DGS 可以实现类似游戏引擎的 LOD 机制：</p>
+<ol>
+<li><strong>Level 0 (远景)</strong>：只渲染八叉树粗糙层级的聚合高斯（或者只渲染 Scaffold-GS 的锚点本身）。</li>
+<li><strong>Level 1 (中景)</strong>：展开八叉树，或者让 MLP 解码出部分神经高斯。</li>
+<li><strong>Level 2 (近景)</strong>：完全展开所有细节。</li>
+</ol>
+<blockquote>
+<p><strong>Rule of Thumb</strong>：
+在大规模场景（如无人机航拍城市）中，实现 LOD 是必须的。否则，渲染远处物体时，过多的重叠高斯不仅浪费算力，还会导致严重的<strong>走样（Aliasing）</strong>。</p>
+</blockquote>
+<hr />
+<h2 id="54-scaffold-vs-grid-vs-tri-plane">5.4 结构化方案对比：Scaffold vs. Grid vs. Tri-plane</h2>
+<p>在 2024-2025 年的文献中，你经常会看到不同的结构化表达。下表是选型指南：</p>
+<p>| 特性 | Vanilla 3DGS | Scaffold-GS | Grid/Voxel-GS | Tri-plane / K-Planes |</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">特性</th>
+<th style="text-align: left;">Vanilla 3DGS</th>
+<th style="text-align: left;">Scaffold-GS</th>
+<th style="text-align: left;">Grid/Voxel-GS</th>
+<th style="text-align: left;">Tri-plane / K-Planes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>基本单元</strong></td>
+<td style="text-align: left;">独立高斯球</td>
+<td style="text-align: left;">稀疏锚点</td>
+<td style="text-align: left;">稠密体素网格</td>
+<td style="text-align: left;">正平面特征图</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>存储效率</strong></td>
+<td style="text-align: left;">低 (1x)</td>
+<td style="text-align: left;"><strong>极高 (20x-50x)</strong></td>
+<td style="text-align: left;">中 (依赖稀疏性)</td>
+<td style="text-align: left;"><strong>极高 (压缩成图片)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>渲染速度</strong></td>
+<td style="text-align: left;">极快 (Native)</td>
+<td style="text-align: left;">略慢 (需 MLP 解码)</td>
+<td style="text-align: left;">快</td>
+<td style="text-align: left;">中 (需多次采样插值)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>几何连续性</strong></td>
+<td style="text-align: left;">差 (离散)</td>
+<td style="text-align: left;"><strong>优 (局部连续)</strong></td>
+<td style="text-align: left;">优</td>
+<td style="text-align: left;">优 (但易过度平滑)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>适用场景</strong></td>
+<td style="text-align: left;">物体/小场景</td>
+<td style="text-align: left;"><strong>大规模/复杂反光</strong></td>
+<td style="text-align: left;">需物理碰撞检测</td>
+<td style="text-align: left;">主要是物体/人脸</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>训练显存</strong></td>
+<td style="text-align: left;">低</td>
+<td style="text-align: left;">中 (MLP 反向传播)</td>
+<td style="text-align: left;">高</td>
+<td style="text-align: left;">低</td>
+</tr>
+</tbody>
+</table>
+<p><em>注：Tri-plane 方法（如 TensoRF 思想的移植）虽然存储极小，但在表达“无界场景”（Unbounded Scenes）时往往不如锚点或八叉树灵活。</em></p>
+<hr />
+<h2 id="55-gotchas">5.5 常见陷阱与错误 (Gotchas)</h2>
+<p>在复现或改进 Scaffold-GS 类算法时，以下坑非常容易踩：</p>
+<h3 id="1">1. 锚点初始化的“冷启动”问题</h3>
+<ul>
+<li><strong>陷阱</strong>：直接在空空间中随机撒点，或者网格初始化太稀疏。</li>
+<li><strong>现象</strong>：模型无法收敛，或者出现大面积空洞。</li>
+<li><strong>原理</strong>MLP 需要依附于正确位置的锚点才能修饰细节。如果锚点位置本身是错的，MLP 很难学出几十厘米甚至几米的位移来修正它。</li>
+<li><strong>对策</strong>：<ul>
+<li><strong>高质量 SfM</strong>：尽量使用 COLMAP 的稠密点云初始化。</li>
+<li><strong>两阶段训练</strong>：先跑 2000 步 Vanilla 3DGS 得到粗糙高斯分布，然后对其进行体素下采样（Voxel Downsampling），将剩下的中心点作为 Scaffold-GS 的锚点。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-mlp">2. 特征维度与 MLP 宽度的平衡</h3>
+<ul>
+<li><strong>陷阱</strong>：为了压缩，把锚点特征 $f_i$ 设得很小（如 8 维），或者把 MLP 设得太深（如 4 层）。</li>
+<li><strong>现象</strong>：前者导致画面模糊（欠拟合），后者导致 FPS 暴跌且难以训练。</li>
+<li><strong>经验值</strong>：<ul>
+<li>锚点特征维度：32 ~ 64 之间。</li>
+<li>MLP 结构：1 ~ 2 层隐藏层，宽度 64。</li>
+<li><strong>Key Insight</strong>：让显式特征（锚点）承担主要信息，MLP 只负责“解压”和“微调”。不要试图把整个场景“背”在 MLP 的权里（那是 NeRF 做的事）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3">3. 消失的梯度与锚点生长</h3>
+<ul>
+<li><strong>陷阱</strong>：在训练后期，某些区域细节不足，但并没有生成新的锚点。</li>
+<li><strong>调试</strong>：检查锚点生长策略。Scaffold-GS 依赖于<strong>累积梯度</strong>。如果某些区域因为视锥剔除或其他原因没有梯度回传，锚点就不会分裂。</li>
+<li><strong>技巧</strong>：定期（每 1000 iter）统计每个锚点的覆盖范围和视图空间梯度。对于梯度大且覆盖范围也大的锚点，强制分裂。</li>
+</ul>
+<h3 id="4-oom">4. 显存爆炸 (OOM)</h3>
+<ul>
+<li><strong>陷阱</strong>：虽然存储变小了，但在训练时，PyTorch 需要保存 MLP 的计算图用于反向传播。如果你一次性解码几百万个锚点，24G 显存瞬间爆炸。</li>
+<li><strong>对策</strong>：<ul>
+<li><strong>Stochastic Decoding</strong>：训练时不要解码所有锚点。只解码视锥内（Frustum）的，或者随机采样部分锚点进行训练。</li>
+<li><strong>Chunking</strong>：将图像分块渲染（Tile-based），虽然 gsplat 已经是 tile-based，但在 MLP 解码阶也需要分批次进行。</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="56">5.6 本章小结</h2>
+<ol>
+<li><strong>结构化的必要性</strong>：为了处理大规模场景和降低存储，必须从“汤（Soup）”式的高斯转变为有组织的结构。</li>
+<li><strong>Scaffold-GS 范式</strong>：通过 <strong>Anchor + MLP</strong> 实现了<strong>显式索引与隐式生成</strong>的结合。</li>
+<li><strong>View-Adaptive 能力</strong>：这是结构化 3DGS 超越 Vanilla 的关键——不仅颜色随视角变，<strong>几何形态</strong>也可以随视角微调，极大地增强了对高光和复杂材质的表现力。</li>
+<li><strong>工程权衡</strong>：我们用少量的计算开销（MLP 推理），换取了巨大的存储优势和更好的图像质量。</li>
+</ol>
+<hr />
+<p><a href="chapter4.html">&lt; 上一章：从零实现一个最小 3DGS 系统</a> | <a href="index.html">目录</a> | <a href="chapter6.html">下一章：动态场景与 4D Gaussian Splatting &gt;</a></p>
+            </article>
+            
+            <nav class="page-nav"><a href="chapter4.html" class="nav-link prev">← 第 4 章 · 从零实现一个最小 3DGS 系统</a><a href="chapter6.html" class="nav-link next">第 6 章 · 动态场景与 4D Gaussian Splatting →</a></nav>
+        </main>
+    </div>
+</body>
+</html>
