@@ -1,0 +1,208 @@
+# 3D Gaussian Splatting：从原理到实践（2025 版）
+
+> 覆盖 3DGS 基础、动态场景、SLAM、扩散与生成、语言语义、通用/前馈方法与多遍历自动驾驶场景。重点讨论对**动态物体**与复杂真实世界数据的处理，并纳入 LangSplatV2、DiffusionGS、AnySplat、WorldSplat、MTGS 等 2025 年前后的最新进展。  
+
+---
+
+## 课程说明
+
+- **课程形式**：Markdown 文档（`index.md + chapter1.md + ...`），可直接托管到 GitHub / Docs / 知识库。
+- **定位**：面向有一定 CV / 图形基础的工程师与研究者，从“看得懂论文”到“能自己写一个可用的 3DGS / GS-SLAM demo”。
+- **技术覆盖（不完全列举）**  
+  - 3DGS 基础与工程栈：原始 3D Gaussian Splatting、CUDA / rasterization 管线  
+  - **结构化 / 可泛化**：Scaffold-GS 等结构化高斯表示:contentReference[oaicite:0]{index=0}  
+  - **动态场景**：4DGS、4D Scaffold-GS、WorldSplat 等 4D 场景生成:contentReference[oaicite:1]{index=1}  
+  - **SLAM**：GS-SLAM、RTG-SLAM 以及其他 3DGS-SLAM 系列工作:contentReference[oaicite:2]{index=2}  
+  - **生成 / 扩散**：DreamGaussian、DiffusionGS、DiffGS 等 3D 生成方法:contentReference[oaicite:3]{index=3}  
+  - **语言与语义**：LangSplat、LangSplatV2 等 3D 语言场:contentReference[oaicite:4]{index=4}  
+  - **前馈 / 通用 / 多遍历驾驶场景**：AnySplat、MTGS 等:contentReference[oaicite:5]{index=5}  
+
+---
+
+## 适用读者与先修知识
+
+**适用读者**
+
+- 想系统掌握 3D Gaussian Splatting 的研究生、算法工程师、图形 / SLAM 工程师。
+- 做 NeRF / NVS / 生成式 3D，希望迁移到 3DGS 生态的同学。
+- 做自动驾驶感知 / 仿真、AR/VR 场景重建、机器人 SLAM 的研发人员。
+
+**建议先修**
+
+- 基础线性代数、概率论、三维几何（相机模型、多视图几何）。
+- 至少一种深度学习框架（PyTorch / JAX 等）。
+- 对 NeRF / volume rendering 有粗略概念会更顺手，但不是硬性要求。
+
+---
+
+## 目录（章节概览）
+
+> 约定：章节文件名为 `chapterN.md`，后续章节可以继续扩展（例如新增专题或读书会）。
+
+---
+
+### 第 1 章 · 3DGS 与三维重建概览 —— 从 NeRF 到 Splat 的大图景  
+**文件**：`chapter1.md`
+
+- 三维重建简史：多视图几何 → NeRF → 3DGS
+- 3D Gaussian Splatting 核心思想直观解释
+- 与网格 / Voxels / NeRF 的对比：表达能力、速度、内存
+- 代表性应用：AR/VR、游戏、虚拟街景、自动驾驶仿真、机器人等
+- 2023–2025 年 3DGS 研究脉络鸟瞰图
+
+---
+
+### 第 2 章 · 数学基础与渲染管线  
+**文件**：`chapter2.md`
+
+- 高斯椭球的数学形式：位置、协方差、颜色与 SH
+- 从世界坐标到像素：相机模型与投影
+- Rasterization / splatting 管线与 alpha compositing
+- 损失函数：颜色、深度、一致性、正则
+- 3DGS 训练过程的优化视角（非线性最小化、可微渲染）
+
+---
+
+### 第 3 章 · 数据与工具链：从多视到可训练场景  
+**文件**：`chapter3.md`
+
+- 数据准备：视频 → 帧 → 去抖 / 去模糊
+- 相机位姿与内参：COLMAP / SLAM / SfM pipeline
+- 点云初始化与高斯初始化策略
+- 常用公共数据集与 3DGS 论文中的实验设置
+- 工程工具：gsplat / 现有 3DGS 开源库生态快速扫盲
+
+---
+
+### 第 4 章 · 从零实现一个最小 3DGS 系统  
+**文件**：`chapter4.md`
+
+- 最小实现目标与功能切分
+- 数据结构：对高斯 / 相机 / 场景的代码建模
+- 前向渲染：投影、排序、splat、合成
+- 反向传播与梯度验证（小规模 toy example）
+- 训练 loop：采样策略、学习率调度、checkpoints
+- 性能与数值稳定性常见坑
+
+---
+
+### 第 5 章 · 结构化与可扩展 3DGS：Scaffold-GS 等方法  
+**文件**：`chapter5.md`
+
+- Vanilla 3DGS 的问题：高斯冗余、尺度不一致、远距离视角退化
+- Scaffold-Gaussian Splatting：锚点 + 局部高斯 + 视角自适应预测:contentReference[oaicite:6]{index=6}  
+- Anchor 生长 / 剪枝策略与多尺度结构
+- 复杂场景中的层次化表示（楼宇、户外、城市级）。
+- 与 MPGS / Multi-plane / Tri-plane 等结构化 3DGS 的比较与兼容
+
+---
+
+### 第 6 章 · 动态场景与 4D Gaussian Splatting（重点：动态物体处理）  
+**文件**：`chapter6.md`
+
+- 静态假设的破裂：动态物体、光照变化、遮挡与形变
+- 4D Gaussians 与时间维度建模：轨迹、高斯流形、anchor-based 动态建模:contentReference[oaicite:7]{index=7}  
+- WorldSplat：面向自动驾驶的 4D 生成式场景（feed-forward + diffusion 修复）:contentReference[oaicite:8]{index=8}  
+- 动态物体的典型处理策略  
+  - 时序分解：静态场 + 动态残差场  
+  - 前景 / 背景分离与 mask 辅助  
+  - 轨迹 / 形变场（deformation field）  
+- 动态场景中常见伪影与调参经验
+
+---
+
+### 第 7 章 · 3DGS + SLAM：GS-SLAM, RTG-SLAM 与在线重建  
+**文件**：`chapter7.md`
+
+- SLAM 基础回顾：前端（跟踪）+ 后端（建图 / 优化）
+- GS-SLAM：首个基于 3DGS 的稠密 RGB-D SLAM，粗到细跟踪与高斯扩展策略:contentReference[oaicite:9]{index=9}  
+- RTG-SLAM：面向大规模场景的实时 3DGS 重建与紧凑高斯表示:contentReference[oaicite:10]{index=10}  
+- 其他 3DGS-SLAM 工作：Gaussian-SLAM、SplaTAM、GS³LAM 等:contentReference[oaicite:11]{index=11}  
+- 动态物体在 SLAM 中的特殊问题：  
+  - 对定位的干扰与 tracking failure  
+  - 静态 / 动态分层地图  
+  - 结合语义分割与 motion segmentation 的 pipeline 设计
+- 示例：用公开实现跑一遍 TUM / Replica 数据集，并分析误差
+
+---
+
+### 第 8 章 · 生成式与扩散 3DGS：DreamGaussian、DiffusionGS、DiffGS  
+**文件**：`chapter8.md`
+
+- 生成式 3D 的几种路线：SDS、latent 3D 著色、显式高斯生成
+- DreamGaussian：生成式高斯 splatting 的高效 3D 内容生成框架:contentReference[oaicite:12]{index=12}  
+- DiffusionGS：将 3DGS “烘焙”进单阶段扩散模型，实单图像到 3D 生成 / 重建:contentReference[oaicite:13]{index=13}  
+- DiffGS 与其他高斯扩散生成方法：latent 空间、高斯数量控制、质量 vs 速度
+- Text-to-3D / Image-to-3D pipeline 中 3DGS 的位置：  
+  - 多视图扩散 vs 单阶段 3D 扩散  
+  - mesh extraction 与下游 DCC / 引擎的衔接
+- 实战：搭建一个简单的“文本 / 图片 → 3DGS → 网格”的生成 pipeline
+
+---
+
+### 第 9 章 · 语言与语义 3DGS：LangSplat & LangSplatV2 等  
+**文件**：`chapter9.md`
+
+- 为什么需要 3D 语言场：开放词汇检索、语义编辑、人机交互
+- LangSplat：将 CLIP / SAM 语义嵌入到 3DGS 中，构建 3D 语言场:contentReference[oaicite:14]{index=14}  
+- LangSplatV2：基于高维特征字典与稀疏系数的高 FPS 语言高斯 splatting（450+ FPS）:contentReference[oaicite:15]{index=15}  
+- 语义场的优化：稀疏性、正则化、跨视角一致性
+- 结合 SLAM / 机器人：开放词汇 3D 导航、物体检索、交互式标注
+-  Feat2GS 等“用 foundation model 特征驱动 3DGS”方法的关系:contentReference[oaicite:16]{index=16}  
+
+---
+
+### 第 10 章 · 通用 / 前馈 3DGS 与非配准数据：AnySplat 等  
+**文件**：`chapter10.md`
+
+- 为什么要“前馈”与“可泛化”：实时应用、海量场景、无 pose 数据
+- AnySplat：从未标定多视图中前馈预测高斯 + 相机位姿的网络框架:contentReference[oaicite:17]{index=17}  
+- 与其他 feed-forward / generalizable 3DGS：Wild-GS、Gaussian-in-the-Wild 等的比较:contentReference[oaicite:18]{index=18}  
+- 无 pose / 噪声 pose 场景中的几何约束与稳健损失设计
+- 前馈方法与传统优化式 3DGS 的融合：初始化 vs 微调
+
+---
+
+### 第 11 章 · 多遍历自动驾驶场景：MTGS 与城市级动态重建  
+**文件**：`chapter11.md`
+
+- 多遍历数据的特性：同一路段、多次采集、天气 / 时间 / 交通动态变化
+- MTGS：Multi-Traversal Gaussian Splatting —— 共享静态几何 + 多遍历动态节与外观校正:contentReference[oaicite:19]{index=19}  
+- 动态物体与 appearance variation 的联合建模（车辆流量、灯光、天气）
+- 与自动驾驶仿真 / 数字孪生 / 城市场景编辑的结合
+- 对比：ArmGS、SatGS、Skyfall-GS 等面向城市 / 卫星 / 驾驶场景的高斯方法:contentReference[oaicite:20]{index=20}  
+
+---
+
+### 第 12 章 · 工程实践、综合项目与未来方向  
+**文件**：`chapter12.md`
+
+- 工程实现中的关键问题：显存、加速、IO、可视化、调参
+- 部署：离线生成 vs 在线更新；桌面 GPU vs 移动设备 / XR 头显
+- 综合大作业建议：  
+  - 一个小型 GS-SLAM 系统  
+  - 一个文本 / 图片 → 3DGS → 可交互场景 Demo  
+  - 一个自动驾驶路口 / 校园场景的 4DGS 重建
+- 未来方向展望：  
+  - 与 3D/4D diffusion、video generation 的更紧耦合  
+  - 与实时物理 / 游戏引擎的融合  
+  - 数据标准（.splat 格式等）与生态
+
+---
+
+## 学习路径建议
+
+- **初学者路线**：第 1–4 章 → 跑通一个最小 3DGS Demo → 再进入结构化与动态章节。
+- **SLAM / 机器人路线**：第 1–3 章快速略读 → 直奔第 6–7 章 → 结合第 11 章做自动驾驶 / 室内机器人项目。
+- **生成式 / AIGC 路线**：第 1–2 章打基础 → 第 8–10 章（生成 + 语义 + 通用）→ 设计一个生成 + 编辑的 3DGS 系统。
+- **研究者路线**：通读所有章节，把“尚待解决的问题”部分当作 idea 仓库。
+
+---
+
+## 版本与更新说明
+
+- **当前版本**：2025-11（已纳入 LangSplatV2、AnySplat、MTGS、WorldSplat 等 2025 年工作）  
+- 后续若新增重要方向（如 video-to-4DGS、互动式 3DGS 编辑工具链等），建议以 `chapter13.md+` 的形式扩展。  
+
+> 接下来：可以从 `chapter1.md` 开始实现与撰写，如果你愿意，我可以先把第 1 章的详细内容也写出来。
+
